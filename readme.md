@@ -1,4 +1,4 @@
 # P7_groupomania
 
-__Repository de l'application reseau social groupomania__
+Repository de l'application reseau social groupomania
 OpenClassrooms, projet 7
