@@ -36,7 +36,6 @@ const User = sequelize.define('User', {
         validate: {
             min: 3,
             max: 40,
-            isAlphanumeric: true
         }
 
     },

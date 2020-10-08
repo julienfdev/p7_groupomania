@@ -24,6 +24,6 @@ exports.sqlSync = async () => {
         Comment.sync();
         Like.sync();
     } catch (error) {
-        
+        console.log(error);
     }
 };

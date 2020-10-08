@@ -6,12 +6,15 @@ const sequelize = require('./modules/Sequelize');
 const sqlFunctions = require('./modules/SqlFunctions')
 const bodyParser = require('body-parser');
 const path = require('path');
-
-const User = require('./models/User');
-
 const htmlSanitizer = require('./middlewares/html-sanitizer');
 
-//SQL Connection
+//Constants
+const apiVersion = 'v1';
+
+//Routers
+const userRouter = require('./routes/User');
+
+//SQL Connection and sync
 sqlFunctions.sqlInit();
 sqlFunctions.sqlSync();
 
@@ -25,13 +28,13 @@ app.use((req, res, next) => {
 
 // Parsing body to json for simple requests
 app.use(bodyParser.json());
-// Sanitizing SQL ?
-
 //Sanitizing HTML
 app.use(htmlSanitizer);
 
 
 
+//Routes
+app.use(`/api/${apiVersion}/user`, userRouter);
 
 app.use('/', (req, res, next) => {
     res.status(200).json({message: 'WIP'});
