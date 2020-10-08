@@ -73,10 +73,32 @@ exports.login = async (req, res, next) => {
     }
 };
 
-exports.getUser = (req, res, next) => {
-    res.status(200).json({
-        message: `user recup : ${req.params.slug}`,
-        admin: req.loggedUser.isAdmin,
-        loggedslug : req.loggedUser.slug
-    });
+exports.getUser = async (req, res, next) => {
+    //Validator middleware etc...
+    try {
+        const attributes =
+            (req.loggedUser.slug === req.params.slug || req.loggedUser.isAdmin) ? ['slug', 'email', 'nickname', 'createdAt'] : ['slug', 'nickname', 'createdAt'];
+        const user = await User.findOne({
+            where: {
+                slug: req.params.slug
+            },
+            attributes: attributes
+        });
+        if (!user) {
+            throw {
+                status: 404,
+                message: 'User not found'
+            }
+        }
+        res.status(200).json({
+            user
+        });
+        
+    } catch (error) {
+        if (error.status) {
+            errorHandlers.customErrorHandler(res, error);
+        } else {
+            errorHandlers.genericErrorHandler(res, error);
+        }
+    }
 };
