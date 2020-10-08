@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const config = require('./config/config');
 
-const sequelize = require('./modules/Sequelize');
-const sqlFunctions = require('./modules/SqlFunctions')
+const sequelize = require('./modules/sequelize');
+const sqlFunctions = require('./modules/sqlFunctions')
 const bodyParser = require('body-parser');
 const path = require('path');
 const htmlSanitizer = require('./middlewares/html-sanitizer');

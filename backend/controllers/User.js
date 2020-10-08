@@ -3,8 +3,8 @@ const config = require('../config/config');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const slugGenerator = require('../modules/SlugGenerator');
-const errorHandlers = require('../modules/ErrorHandlers');
+const slugGenerator = require('../modules/slugGenerator');
+const errorHandlers = require('../modules/errorHandlers');
 
 exports.signup = async (req, res, next) => {
     //Validators (req.validated.xxx) (en MIDDLEWARE avec argument selon scope!!)
@@ -71,8 +71,12 @@ exports.login = async (req, res, next) => {
             errorHandlers.genericErrorHandler(res, error);
         }
     }
+};
 
-    /*     res.status(200).json({
-            message: 'login controller'
-        }); */
+exports.getUser = (req, res, next) => {
+    res.status(200).json({
+        message: `user recup : ${req.params.slug}`,
+        admin: req.loggedUser.isAdmin,
+        loggedslug : req.loggedUser.slug
+    });
 };

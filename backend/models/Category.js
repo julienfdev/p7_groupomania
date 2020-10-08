@@ -2,7 +2,7 @@ const {
     Sequelize,
     DataTypes
 } = require('sequelize');
-const sequelize = require('../modules/Sequelize');
+const sequelize = require('../modules/sequelize');
 
 
 const Category = sequelize.define('Category', {
