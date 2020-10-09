@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const slugGenerator = require('../modules/slugGenerator');
 const errorHandlers = require('../modules/errorHandlers');
-const permissions = require('../modules/userPermissions')
+const permissions = require('../modules/userPermissions');
 
 exports.signup = async (req, res, next) => {
     //Validators (req.validated.xxx) (en MIDDLEWARE avec argument selon scope!!)

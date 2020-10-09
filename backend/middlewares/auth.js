@@ -5,6 +5,7 @@
 // ██║  ██║╚██████╔╝   ██║   ██║  ██║
 // ╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝
 //                                   
+// PENSER APRES AVOIR INCORPORE MULTER D'APPELER UNE FONCTION DE SUPPRESSION DANS LE CATCH SI REQ.FILES 
 
 const config = require('../config/config');
 

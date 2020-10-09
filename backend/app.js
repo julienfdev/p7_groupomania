@@ -13,6 +13,7 @@ const apiVersion = 'v1';
 
 //Routers
 const userRouter = require('./routes/User');
+const postRouter = require('./routes/Post');
 
 //SQL Connection and sync
 sqlFunctions.sqlInit();
@@ -35,6 +36,7 @@ app.use(htmlSanitizer);
 
 //Routes
 app.use(`/api/${apiVersion}/user`, userRouter);
+app.use(`/api/${apiVersion}/post`, postRouter);
 
 app.use('/', (req, res, next) => {
     res.status(200).json({message: 'WIP'});
