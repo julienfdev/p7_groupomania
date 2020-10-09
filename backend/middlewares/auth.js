@@ -52,7 +52,7 @@ const authMiddleware = async (req, res, next) => {
         // We search the database for a user matching the slug INSIDE THE TOKEN
         const userMatch = await User.findOne({
             attributes: [
-                'slug', 'isAdmin'
+                'slug', 'isAdmin', 'id'
             ],
             where: {
                 slug: tokenValid.userSlug
@@ -77,14 +77,11 @@ const authMiddleware = async (req, res, next) => {
         req.loggedUser = {};
         req.loggedUser.isAdmin = userMatch.isAdmin;
         req.loggedUser.slug = userMatch.slug;
+        req.loggedUser.id = userMatch.id
         delete req.body.userSlug; // We don't need this field anymore, it's stored in loggedUser.slug
         next();
     } catch (error) {
-        if (error.status) {
-            errorHandlers.customErrorHandler(res, error);
-        } else {
-            errorHandlers.genericErrorHandler(res, error);
-        }
+        errorHandlers.basicHandler(res, error);
     }
     //next();
 };

@@ -6,10 +6,11 @@ const sequelize = require('../modules/sequelize');
 
 const Like = sequelize.define('Like', {
     like_status: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.TINYINT(2),
         allowNull: false,
         validate: {
-            isBoolean: true
+           min: -1,
+           max: 1
         }
     }
 }, {

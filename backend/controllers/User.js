@@ -1,11 +1,17 @@
 const config = require('../config/config');
 
 const User = require('../models/User');
+const Post = require('../models/Post');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const slugGenerator = require('../modules/slugGenerator');
 const errorHandlers = require('../modules/errorHandlers');
 const permissions = require('../modules/userPermissions');
+const {
+    formatPosts,
+    formatPost
+} = require('../modules/formattingFunctions');
+const Category = require('../models/Category');
 
 exports.signup = async (req, res, next) => {
     //Validators (req.validated.xxx) (en MIDDLEWARE avec argument selon scope!!)
@@ -26,13 +32,8 @@ exports.signup = async (req, res, next) => {
         res.status(201).json({
             message: 'User successfully created'
         });
-    } catch (err) {
-        console.log(err);
-        if (err.errors) {
-            errorHandlers.sqlErrorHandler(res, err.errors);
-        } else {
-            errorHandlers.genericErrorHandler(res, err);
-        }
+    } catch (error) {
+        errorHandlers.basicHandler(res, error);
     }
 }
 
@@ -77,11 +78,7 @@ exports.login = async (req, res, next) => {
             })
         }
     } catch (error) {
-        if (error.status) {
-            errorHandlers.customErrorHandler(res, error);
-        } else {
-            errorHandlers.genericErrorHandler(res, error);
-        }
+        errorHandlers.basicHandler(res, error);
     }
 };
 
@@ -89,8 +86,8 @@ exports.getUser = async (req, res, next) => {
     //Validator middleware etc...
     try {
         const attributes =
-        // Depending if a random user is fetching another one or if it's the same user/admin
-        // fetched columns are not the same 
+            // Depending if a random user is fetching another one or if it's the same user/admin
+            // fetched columns are not the same 
             permissions.isSelfOrAdmin(req.loggedUser, req.params.slug) ? ['slug', 'email', 'nickname', 'createdAt'] : ['slug', 'nickname', 'createdAt'];
         // We try to find the slug passed in params (/:slug route)
         const user = await User.findOne({
@@ -111,11 +108,7 @@ exports.getUser = async (req, res, next) => {
         });
 
     } catch (error) {
-        if (error.status) {
-            errorHandlers.customErrorHandler(res, error);
-        } else {
-            errorHandlers.genericErrorHandler(res, error);
-        }
+        errorHandlers.basicHandler(res, error);
     }
 };
 
@@ -170,13 +163,7 @@ exports.updateUser = async (req, res, next) => {
             message: 'User updated successfully'
         });
     } catch (error) {
-        if (error.status) {
-            errorHandlers.customErrorHandler(res, error);
-        } else if (error.errors) {
-            errorHandlers.sqlErrorHandler(res, error.errors);
-        } else {
-            errorHandlers.genericErrorHandler(res, error);
-        }
+        errorHandlers.basicHandler(res, error);
     }
 };
 
@@ -233,10 +220,68 @@ exports.deleteUser = async (req, res, next) => {
             message: 'User deleted successfully'
         });
     } catch (error) {
-        if (error.status) {
-            errorHandlers.customErrorHandler(res, error);
-        } else {
-            errorHandlers.genericErrorHandler(res, error);
-        }
+        errorHandlers.basicHandler(res, error);
     }
-}
+};
+
+exports.getUserPosts = async (req, res, next) => {
+    // Search user from slug params, then fetch his posts
+    try {
+        const user = await User.findOne({
+            where: {
+                slug: req.params.slug
+            }
+        });
+        if (!user) {
+            throw {
+                status: 404,
+                message: 'User not found'
+            };
+        }
+        // Get all user posts    
+        const rawPosts = await user.getPosts({
+            order: [
+                ['createdAt', 'DESC']
+            ],
+            include: {
+                model: Category,
+                required: true
+            }
+        });
+        const posts = formatPosts(rawPosts);
+        res.status(200).json(posts);
+    } catch (error) {
+        console.log(error.message);
+        errorHandlers.basicHandler(res, error);
+    }
+};
+
+exports.getUserLikedPosts = async (req, res, next) => {
+    try {
+        const user = await User.findOne({
+            where: {
+                slug: req.params.slug
+            }
+        });
+        if (!user) {
+            throw {
+                status: 404,
+                message: 'User not found'
+            };
+        }
+        const rawLikes = await user.getLikes({
+            where:{
+                like_status: 1
+            },
+        });
+        let likedPosts = [];
+        for(like of rawLikes){
+            const likedPost = await like.getPost({include: Category});
+            likedPosts.unshift(formatPost(likedPost));
+        }
+        res.status(200).json({likedPosts});
+    } catch (error) {
+        console.log(error);
+        errorHandlers.basicHandler(res, error);
+    }
+};
