@@ -16,7 +16,6 @@ exports.dataValidationErrorHandler = (res, err) =>{
 }
 
 exports.genericErrorHandler = (res, err) =>{
-    console.log({error: err.message});
     res.status(500).json({error: 'Something went wrong'});
 }
 
