@@ -51,7 +51,7 @@ const User = sequelize.define('User', {
 
 });
 
-// Foreign Keys
+// Foreign Key : Comments table has a foreign user_id key referencing user.id (duplicate required for sequelize functions like getComment() etc..)
 User.hasMany(Comment, {
     foreignKey: {
         name: "user_id"
@@ -63,6 +63,7 @@ Comment.belongsTo(User, {
     }
 });
 
+// Foreign Key : Posts table has a foreign user_id key referencing user.id (duplicate required for sequelize functions like getPost() etc..)
 User.hasMany(Post, {
     foreignKey: {
         name: 'user_id'
@@ -74,6 +75,7 @@ Post.belongsTo(User, {
     }
 });
 
+// Foreign Key : Like table has a foreign user_id key referencing user.id (duplicate required for sequelize functions like getPost() etc..)
 User.hasMany(Like, {
     foreignKey: {
         name: 'user_id'

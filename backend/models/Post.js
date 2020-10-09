@@ -1,3 +1,5 @@
+// See User model for comments about foreign keys
+
 const {
     Sequelize,
     DataTypes
@@ -53,7 +55,7 @@ Post.hasMany(Like, {
     foreignKey: {
         name: 'post_id'
     },
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE' // When a post is deleted, we delete the likes attached to it
 })
 Like.belongsTo(Post, {
     foreignKey: {
@@ -68,7 +70,7 @@ Post.hasMany(Comment, {
         name: 'post_id',
         allowNull: false
     },
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE' // When a post is deleted, we delete the comments attached to it
 });
 Comment.belongsTo(Post, {
     foreignKey: {
