@@ -29,7 +29,7 @@ const Post = sequelize.define('Post', {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-            isUrl: true
+            //isUrl: true               // Decomment for prod on tld
         }
     },
     title: {

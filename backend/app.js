@@ -7,6 +7,7 @@ const sqlFunctions = require('./modules/sqlFunctions')
 const bodyParser = require('body-parser');
 const path = require('path');
 const htmlSanitizer = require('./middlewares/html-sanitizer');
+const errorHandlers = require('./modules/errorHandlers')
 
 //Constants
 const apiVersion = 'v1';
@@ -38,8 +39,19 @@ app.use(htmlSanitizer);
 app.use(`/api/${apiVersion}/user`, userRouter);
 app.use(`/api/${apiVersion}/post`, postRouter);
 
-app.use('/', (req, res, next) => {
-    res.status(200).json({message: 'WIP'});
-});
+app.use('/public', express.static(__dirname + '/public'))
+
+app.use( (err, req, res, next) => {
+    console.error(err)
+    if(req.file){
+        errorHandlers.multerUndo(req);
+    }
+    if(err.code){
+        res.status(500).json({error: err.code})
+    }
+    else{
+        res.status(500).json({error: err.message})
+    }
+  })
 
 module.exports = app;

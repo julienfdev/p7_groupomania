@@ -81,6 +81,7 @@ const authMiddleware = async (req, res, next) => {
         delete req.body.userSlug; // We don't need this field anymore, it's stored in loggedUser.slug
         next();
     } catch (error) {
+        errorHandlers.multerUndo(req);           // Delete upload if request unauth
         errorHandlers.basicHandler(res, error);
     }
     //next();

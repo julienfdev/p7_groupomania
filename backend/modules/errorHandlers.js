@@ -7,6 +7,8 @@
 //                                                                                                                
 // Error handlers respond to requests according to error type
 
+const fs = require('fs');
+
 // Sequelize has custom error handling, failed requests have a path (ex: email or User.email) and a validatorKey (ex: not_unique)
 const sqlErrorHandler = (res, err) => {
     let errorList = []
@@ -48,3 +50,11 @@ exports.basicHandler = (res, error) => {
         genericErrorHandler(res, error);
     }
 }
+
+exports.multerUndo = (req) =>{
+    if(req.file){
+        fs.unlink(req.file.path, ()=>{
+            console.log('unlinked');
+        });
+    }
+};
