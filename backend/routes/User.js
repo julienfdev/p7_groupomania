@@ -13,7 +13,7 @@ router.get('/:slug/comments/', auth, userCtrl.getUserComments);
 router.put('/:slug', auth, userCtrl.updateUser);
 router.delete('/:slug', auth, userCtrl.deleteUser);
 
-router.post('/signup',validators.userSignup, userCtrl.signup);
-router.post('/login', userCtrl.login);
+router.post('/signup', validators.userSignup, userCtrl.signup);
+router.post('/login', validators.userLogin, userCtrl.login);
 
 module.exports = router;
