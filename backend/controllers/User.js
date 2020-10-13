@@ -9,7 +9,9 @@ const errorHandlers = require('../modules/errorHandlers');
 const permissions = require('../modules/userPermissions');
 const {
     formatPosts,
-    formatPost
+    formatPost,
+    formatComments,
+    formatComment
 } = require('../modules/formattingFunctions');
 const Category = require('../models/Category');
 
@@ -270,18 +272,54 @@ exports.getUserLikedPosts = async (req, res, next) => {
             };
         }
         const rawLikes = await user.getLikes({
-            where:{
+            where: {
                 like_status: 1
             },
         });
         let likedPosts = [];
-        for(like of rawLikes){
-            const likedPost = await like.getPost({include: Category});
+        for (like of rawLikes) {
+            const likedPost = await like.getPost({
+                include: Category
+            });
             likedPosts.unshift(formatPost(likedPost));
         }
-        res.status(200).json({likedPosts});
+        res.status(200).json(likedPosts);
     } catch (error) {
         console.log(error);
         errorHandlers.basicHandler(res, error);
     }
 };
+
+exports.getUserComments = async (req, res, next) => {
+    try {
+        if (!permissions.isSelfOrAdmin(req.loggedUser, req.params.slug)) {
+            throw {
+                status: 403,
+                message: 'You are not authorized to get the user comments'
+            };
+        }
+        const user = await User.findOne({
+            where: {
+                slug: req.params.slug
+            }
+        });
+        if (!user) {
+            throw {
+                status: 404,
+                message: 'User not found'
+            };
+        }
+        const rawComments = await user.getComments({
+                limit: 50,
+                order: [
+                    ['createdAt', 'DESC']
+                ]
+            });
+             // Limit
+    let comments = await formatComments(rawComments);
+    res.status(200).json(comments);
+} catch (error) {
+    console.log(error);
+    errorHandlers.basicHandler(res, error);
+}
+}

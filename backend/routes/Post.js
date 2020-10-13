@@ -9,6 +9,7 @@ const multipartFormatter = require('../middlewares/multipart-formatter');
 
 router.post('/',multer, multipartFormatter, auth, PostCtrl.postPost);
 router.post('/:slug/like',auth, PostCtrl.postLike);
+router.post('/:slug/comment', auth, PostCtrl.postComment);
 
 router.put('/:slug',multer, multipartFormatter, auth, PostCtrl.updatePost);
 router.delete('/:slug', auth, PostCtrl.deletePost);

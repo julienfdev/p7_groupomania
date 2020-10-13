@@ -259,7 +259,10 @@ exports.getPage = async (req, res, next, hotPage) => {
             include: {
                 model: Category,
                 required: true
-            }
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
         });
         if (rawHotPostArray.length) {
             res.status(200).json(formatPosts(rawHotPostArray));
@@ -300,12 +303,49 @@ exports.getCategoryPosts = async (req, res, next) => {
             },
             limit: postPerPage,
             offset,
+            order: [
+                ['createdAt', 'DESC']
+            ]
         });
         if (rawPostArray.length) {
             res.status(200).json(formatPosts(rawPostArray));
         } else {
             res.status(204).json();
         }
+    } catch (error) {
+        console.error(error.message);
+        errorHandlers.basicHandler(res, error);
+    }
+};
+
+/* Comment : {
+    text : String(500),
+    user_id : Number
+}
+*/
+exports.postComment = async (req, res, next) => {
+    // VALIDATION EN AMONT SUR LE COMMENTAIRE
+    try {
+        const post = await Post.findOne({
+            where: {
+                slug: req.params.slug
+            },
+        });
+        if (!post) {
+            throw {
+                status: 404,
+                message: 'Post not found'
+            };
+        }
+        const comment = {
+            text: req.body.text,
+            slug: slugGenerator(req.body.text),
+            user_id: req.loggedUser.id
+        }
+        await post.createComment(comment)
+
+        res.status(201).json({commentSlug: comment.slug});
+
     } catch (error) {
         console.error(error.message);
         errorHandlers.basicHandler(res, error);
