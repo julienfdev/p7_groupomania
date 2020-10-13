@@ -23,3 +23,5 @@ module.exports = multer({
         fileSize: 1048576 // 1MB max filesize
     }
 }).single('image');
+
+// GERER QUAND IMAGE PAS D'EXTENSION EN BACK AUSSI

@@ -6,7 +6,8 @@ const errorHandlers = require('../modules/errorHandlers');
 const permissions = require('../modules/userPermissions');
 const fs = require('fs');
 const {
-    formatPost
+    formatPost,
+    formatPosts
 } = require('../modules/formattingFunctions');
 
 
@@ -81,7 +82,7 @@ exports.getPost = async (req, res, next) => {
             where: {
                 slug: req.params.slug
             },
-            include: {                  // INNER JOIN
+            include: { // INNER JOIN
                 model: Category,
                 required: true
             }
@@ -140,13 +141,13 @@ exports.updatePost = async (req, res, next) => {
         }
         let imageUrl = post.image_url;
         // If there is a file (image change), delete old one and parse new url
-        if(req.file){
+        if (req.file) {
             unlinker(imageUrl);
             imageUrl = `${req.protocol}://${req.get('host')}/${req.file.path}`;
         }
         const postUpdate = {
             ...req.body,
-            slug: slugGenerator(req.body.title),
+            slug: (req.body.title) ? slugGenerator(req.body.title) : post.slug,
             image_url: imageUrl,
             // If user is admin and is_hot updated, new is_hot, else, old one 
             is_hot: (req.loggedUser.isAdmin && (req.body.is_hot !== null && req.body.is_hot !== undefined) ? req.body.is_hot : post.is_hot) // If user is admin and isHot updated, new is hot, else, old one 
@@ -158,6 +159,7 @@ exports.updatePost = async (req, res, next) => {
             message: 'Successfully updated post'
         });
     } catch (error) {
+        console.error(error);
         // If there's an error of any kind, we delete the updated file
         errorHandlers.multerUndo(req);
         errorHandlers.basicHandler(res, error);
@@ -239,9 +241,80 @@ const likeLogicHandler = async (req, res, post) => {
     }
 };
 
+exports.getPage = async (req, res, next, hotPage) => {
+    try {
+        const postPerPage = 25;
+        let offset = 0;
+        if (req.params.page) {
+            if (!(Number(req.params.page) === NaN)) {
+                offset = (Number(req.params.page) > 1) ? postPerPage * Number(req.params.page - 1) : 0;
+            }
+        }
+        const rawHotPostArray = await Post.findAll({
+            where: {
+                is_hot: hotPage
+            },
+            limit: postPerPage,
+            offset,
+            include: {
+                model: Category,
+                required: true
+            }
+        });
+        if (rawHotPostArray.length) {
+            res.status(200).json(formatPosts(rawHotPostArray));
+        } else {
+            res.status(204).json();
+        }
+    } catch (error) {
+        console.error(error.message);
+        errorHandlers.basicHandler(res, error);
+    }
+
+};
+
+exports.getCategoryPosts = async (req, res, next) => {
+    try {
+        const postPerPage = 25;
+        let offset = 0;
+        if (req.params.page) {
+            if (!(Number(req.params.page) === NaN)) {
+                offset = (Number(req.params.page) > 1) ? postPerPage * Number(req.params.page - 1) : 0;
+            }
+        }
+        const category = await Category.findOne({
+            where: {
+                slug: req.params.slug
+            }
+        });
+        if (!category) {
+            throw {
+                status: 404,
+                message: 'Category not found'
+            };
+        }
+        const rawPostArray = await category.getPosts({
+            include: {
+                model: Category,
+                required: true
+            },
+            limit: postPerPage,
+            offset,
+        });
+        if (rawPostArray.length) {
+            res.status(200).json(formatPosts(rawPostArray));
+        } else {
+            res.status(204).json();
+        }
+    } catch (error) {
+        console.error(error.message);
+        errorHandlers.basicHandler(res, error);
+    }
+};
+
 const unlinker = (filepath) => {
     const formattedPath = `./public/images/${filepath.split('/public/images/')[1]}`;
-    fs.unlink(formattedPath, ()=>{
+    fs.unlink(formattedPath, () => {
         console.log('unlinked');
     });
 }
