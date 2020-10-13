@@ -22,8 +22,6 @@ post: an object with the following fields
 }
 */
 exports.postPost = async (req, res, next) => {
-    // Validators etc qui valident l'existence d'une catégorie etc
-    // (req.validated)
     //We get the category instance (each post has ONE category)
     try {
         const category = await Category.findOne({
@@ -58,7 +56,7 @@ exports.postPost = async (req, res, next) => {
     }
 };
 
-exports.postLike = async (req, res, next) => { // Il faudra des transactions ici
+exports.postLike = async (req, res, next) => {
     try {
         const post = await Post.findOne({
             where: {
@@ -120,7 +118,6 @@ post: an object with the following fields
 */
 exports.updatePost = async (req, res, next) => {
     // Get the post to be modified and get User to compare with the loggedUser
-    // RAJOUTER VALIDATION REQ.VALIDATED ETC
     try {
         const post = await Post.findOne({
             where: {
@@ -325,7 +322,6 @@ exports.getCategoryPosts = async (req, res, next) => {
 }
 */
 exports.postComment = async (req, res, next) => {
-    // VALIDATION EN AMONT SUR LE COMMENTAIRE
     try {
         const post = await Post.findOne({
             where: {
@@ -339,8 +335,8 @@ exports.postComment = async (req, res, next) => {
             };
         }
         const comment = {
-            text: req.body.text,
-            slug: slugGenerator(req.body.text),
+            text: req.validated.text,
+            slug: slugGenerator(req.validated.text),
             user_id: req.loggedUser.id
         }
         await post.createComment(comment)

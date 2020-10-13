@@ -13,12 +13,14 @@ exports.adminGetLastComments = async (req, res, next) => {
                 message: 'You are not an admin'
             };
         }
+        // Get last 50 Comments
         const rawComments = await Comment.findAll({
             limit: 50,
             order: [
                 ['createdAt', 'DESC']
             ]
         });
+        // Async function because it fetches Post information
         const comments = await formatComments(rawComments);
         res.status(200).json(comments);
     } catch (error) {
@@ -40,14 +42,15 @@ exports.updateComment = async (req, res, next) => {
                 message: 'Comment not found'
             };
         }
-        if (!((await comment.getUser()).id === req.loggedUser.id) || !req.loggedUser.isAdmin) {
+        // lazy loading
+        if (!((await comment.getUser({attributes: ['id']})).id === req.loggedUser.id) || !req.loggedUser.isAdmin) {
             throw {
                 status: 403,
                 message: 'Unauthorized update'
             }
         }
         await comment.update({
-            text: req.body.text
+            text: req.validated.text
         })
         res.status(200).json({message: 'Comment updated successfully'});
     } catch (error) {

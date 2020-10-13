@@ -150,7 +150,7 @@ exports.userSignup = (req, res, next) => {
             errorObject.email = 'missing';
         } else if (!validator.isEmail(req.body.email)) {
             errorObject.email = 'type'
-        } else if (req.body.email.length > 100) {
+        } else if (req.body.email.length > 100 || req.body.email.length < 5) {
             errorObject.email = 'length'
         }
 
@@ -189,7 +189,7 @@ exports.userLogin = (req, res, next) => {
             errorObject.email = 'missing';
         } else if (!validator.isEmail(req.body.email)) {
             errorObject.email = 'type'
-        } else if (req.body.email.length > 100) {
+        } else if (req.body.email.length > 100 || req.body.email.length < 5) {
             errorObject.email = 'length'
         }
 
@@ -214,3 +214,48 @@ exports.userLogin = (req, res, next) => {
         errorHandlers.multerUndo(req);
     }
 }
+
+exports.userUpdate = (req, res, next) => {
+    try {
+        let errorObject = {};
+        req.validated = {};
+        if (req.body.password){
+            if(!(typeof req.body.password === 'string')){
+                errorObject.password = 'type';
+            }
+            else{
+                req.validated.password = req.body.password;
+            }
+        }
+        if (req.body.nickname){
+            if(!(typeof req.body.password === 'string')){
+                errorObject.password = 'type';
+            }
+            else if (req.body.nickname.length > 40 || req.body.nickname.length < 3){
+                errorObject.password = 'length';
+            }
+            else{
+                req.validated.password = req.body.password;
+            }
+        }
+        if (req.body.email){
+            if (!validator.isEmail(req.body.email)) {
+                errorObject.email = 'type'
+            } else if (req.body.email.length > 100 || req.body.email.length < 5) {
+                errorObject.email = 'length'
+            }
+            else{
+                req.validated.email = req.body.email;
+            }
+        }
+
+        if (Object.keys(errorObject).length > 0) {
+            throw errorObject;
+        }
+
+        next();
+    } catch (error) {
+        errorHandlers.dataValidationErrorHandler(res, error);
+        errorHandlers.multerUndo(req);
+    }
+};

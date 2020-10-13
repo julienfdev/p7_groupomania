@@ -47,7 +47,7 @@ exports.login = async (req, res, next) => {
         const userFound = await User.findOne({
             attributes: ['email', 'password', 'slug'],
             where: {
-                email: req.body.email
+                email: req.validated.email
             }
         })
         // If not found, this user doesn't exist
@@ -59,7 +59,7 @@ exports.login = async (req, res, next) => {
         } else {
             // If the user exists, comparing the password to the hash in the userFound instance (password column)
             // bcrypt.compare returns a bool
-            const passValid = await bcrypt.compare(req.body.password, userFound.password);
+            const passValid = await bcrypt.compare(req.validated.password, userFound.password);
             if (!passValid) {
                 throw {
                     message: 'Wrong password',
