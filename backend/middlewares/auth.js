@@ -5,7 +5,6 @@
 // ██║  ██║╚██████╔╝   ██║   ██║  ██║
 // ╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝
 //                                   
-// PENSER APRES AVOIR INCORPORE MULTER D'APPELER UNE FONCTION DE SUPPRESSION DANS LE CATCH SI REQ.FILES 
 
 const config = require('../config/config');
 
@@ -81,7 +80,7 @@ const authMiddleware = async (req, res, next) => {
         delete req.body.userSlug; // We don't need this field anymore, it's stored in loggedUser.slug
         next();
     } catch (error) {
-        errorHandlers.multerUndo(req);           // Delete upload if request unauth
+        errorHandlers.multerUndo(req);           // Delete upload if request unauthorized
         errorHandlers.basicHandler(res, error);
     }
     //next();

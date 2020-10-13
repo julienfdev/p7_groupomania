@@ -9,6 +9,16 @@ const {
     formatPost
 } = require('../modules/formattingFunctions');
 
+
+/* Post object : 
+Multipart: 
+image : 1MB max png/jpg/jpeg
+post: an object with the following fields
+{
+    title: String,
+    categorySlug: String
+}
+*/
 exports.postPost = async (req, res, next) => {
     // Validators etc qui valident l'existence d'une catégorie etc
     // (req.validated)
@@ -71,7 +81,7 @@ exports.getPost = async (req, res, next) => {
             where: {
                 slug: req.params.slug
             },
-            include: {
+            include: {                  // INNER JOIN
                 model: Category,
                 required: true
             }
@@ -97,6 +107,15 @@ exports.getPost = async (req, res, next) => {
     }
 };
 
+/* Post object : 
+Multipart OR json only: 
+[image : 1MB max png/jpg/jpeg]
+post: an object with the following fields
+{
+    title: String,
+    [is_hot] (only if Admin)
+}
+*/
 exports.updatePost = async (req, res, next) => {
     // Get the post to be modified and get User to compare with the loggedUser
     // RAJOUTER VALIDATION REQ.VALIDATED ETC
@@ -112,6 +131,7 @@ exports.updatePost = async (req, res, next) => {
                 message: 'Post not found'
             };
         }
+        // If post not modified by admin or user itself
         if (!(req.loggedUser.isAdmin || req.loggedUser.id === post.user_id)) {
             throw {
                 status: 403,
@@ -119,6 +139,7 @@ exports.updatePost = async (req, res, next) => {
             };
         }
         let imageUrl = post.image_url;
+        // If there is a file (image change), delete old one and parse new url
         if(req.file){
             unlinker(imageUrl);
             imageUrl = `${req.protocol}://${req.get('host')}/${req.file.path}`;
@@ -126,21 +147,21 @@ exports.updatePost = async (req, res, next) => {
         const postUpdate = {
             ...req.body,
             slug: slugGenerator(req.body.title),
-            image_url: imageUrl, // FAIRE LA PASSERELLE AVEC MULTER
-            is_hot: (req.loggedUser.isAdmin ? req.body.is_hot : post.is_hot)
+            image_url: imageUrl,
+            // If user is admin and is_hot updated, new is_hot, else, old one 
+            is_hot: (req.loggedUser.isAdmin && (req.body.is_hot !== null && req.body.is_hot !== undefined) ? req.body.is_hot : post.is_hot) // If user is admin and isHot updated, new is hot, else, old one 
         }
         await post.update(postUpdate);
         res.status(200).json({
+            // providing the new slug to the frontend to push to the router
             postSlug: post.slug,
             message: 'Successfully updated post'
         });
     } catch (error) {
+        // If there's an error of any kind, we delete the updated file
         errorHandlers.multerUndo(req);
         errorHandlers.basicHandler(res, error);
     }
-
-    // Gestion modif fichier + fs pour suppr l'ancien etc
-    // Ce qu'on peut faire avec Multer c'est passer un middleware après coup pour refaire un body "standard"
 };
 
 
@@ -177,11 +198,13 @@ exports.deletePost = async (req, res, next) => {
 
 
 const likeLogicHandler = async (req, res, post) => {
+    // We check if user has already liked (or disliked) the post
     const postAlreadyLiked = await post.getLikes({
         where: {
             user_id: req.loggedUser.id
         }
     })
+    // If we don't found the user, then the like status provided can't be 0
     if (!postAlreadyLiked[0]) {
         if (req.body.like_status === 0) {
             throw {
@@ -199,6 +222,7 @@ const likeLogicHandler = async (req, res, post) => {
         res.status(200).json({
             message: 'like Status updated'
         });
+        // If user already liked or disliked, it can only be a "back to neutral request", if it's not : error
     } else if (req.body.like_status !== 0) {
         throw {
             status: 400,

@@ -41,12 +41,15 @@ app.use(`/api/${apiVersion}/post`, postRouter);
 
 app.use('/public', express.static(__dirname + '/public'))
 
+// Default error handling (for third-party middlewares)
 app.use( (err, req, res, next) => {
     console.error(err)
     if(req.file){
+        // If a file has been uploaded, we delete it
         errorHandlers.multerUndo(req);
     }
     if(err.code){
+        // If it's a multer error (eg max filesize)
         res.status(500).json({error: err.code})
     }
     else{
