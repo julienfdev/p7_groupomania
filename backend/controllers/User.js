@@ -129,15 +129,15 @@ exports.updateUser = async (req, res, next) => {
             }
         }
         // If password has been changed, rehash
-        if (req.body.password) {
-            req.body.password = await bcrypt.hash(req.body.password, 10);
+        if (req.validated.password) {
+            req.validated.password = await bcrypt.hash(req.validated.password, 10);
         }
         // If nickname has been changed we need to update the slug, and if it's not the admin, we need to provide a new token/slug to the user
-        if (req.body.nickname) {
-            req.body.slug = slugGenerator(req.body.nickname)
+        if (req.validated.nickname) {
+            req.validated.slug = slugGenerator(req.validated.nickname)
             if (permissions.isSelf(req.loggedUser, req.params.slug)) {
                 token = jwt.sign({
-                        userSlug: req.body.slug
+                        userSlug: req.validated.slug
                     },
                     config.jwtConfig.secret, {
                         expiresIn: config.jwtConfig.expiration
@@ -146,7 +146,7 @@ exports.updateUser = async (req, res, next) => {
         }
         // We update the db object spreading the body of the request (to be changed to req.validated)
         const userUpdated = await User.update({
-            ...req.body
+            ...req.validated
         }, {
             where: {
                 slug: req.params.slug
@@ -161,7 +161,7 @@ exports.updateUser = async (req, res, next) => {
         }
         res.status(200).json({
             token: token,
-            userSlug: req.body.slug,
+            userSlug: req.validated.slug,
             message: 'User updated successfully'
         });
     } catch (error) {
@@ -180,7 +180,7 @@ exports.deleteUser = async (req, res, next) => {
         }
         // If the user is trying to delete his account, he needs to provide his password
         if (permissions.isSelf(req.loggedUser, req.params.slug)) {
-            if (!req.body.password) {
+            if (!req.validated.password) {
                 throw {
                     status: 401,
                     message: 'Password validation missing'
@@ -199,7 +199,7 @@ exports.deleteUser = async (req, res, next) => {
                     message: 'User not valid anymore'
                 };
             }
-            if (!(await bcrypt.compare(req.body.password, userMatch.password))) {
+            if (!(await bcrypt.compare(req.validated.password, userMatch.password))) {
                 throw {
                     status: 401,
                     message: 'Invalid password'

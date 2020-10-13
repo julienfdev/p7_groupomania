@@ -259,3 +259,26 @@ exports.userUpdate = (req, res, next) => {
         errorHandlers.multerUndo(req);
     }
 };
+
+exports.userDelete = (req, res, next) => {
+    try {
+        let errorObject = {};
+        req.validated = {};
+        if (!req.body.password){
+            if(!(typeof req.body.password === 'string')){
+                errorObject.password = 'type';
+            }
+            else{
+                req.validated.password = req.body.password;
+            }
+        }
+        if (Object.keys(errorObject).length > 0) {
+            throw errorObject;
+        }
+
+        next();
+    } catch (error) {
+        errorHandlers.dataValidationErrorHandler(res, error);
+        errorHandlers.multerUndo(req);
+    }
+};

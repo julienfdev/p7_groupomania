@@ -11,7 +11,7 @@ router.get('/:slug/likedPosts', auth, userCtrl.getUserLikedPosts);
 router.get('/:slug/comments/', auth, userCtrl.getUserComments);
 
 router.put('/:slug', auth, validators.userUpdate, userCtrl.updateUser);
-router.delete('/:slug', auth, userCtrl.deleteUser);
+router.delete('/:slug', auth,validators.userDelete, userCtrl.deleteUser);
 
 router.post('/signup', validators.userSignup, userCtrl.signup);
 router.post('/login', validators.userLogin, userCtrl.login);
