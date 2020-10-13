@@ -25,8 +25,11 @@ const sqlErrorHandler = (res, err) => {
     });
 };
 
-const dataValidationErrorHandler = (res, err) => {
-
+exports.dataValidationErrorHandler = (res, errorObject) => {
+    res.status(400).json({
+        message: 'Data validation error',
+        errorObject
+    })
 }
 
 const genericErrorHandler = (res, err) => {

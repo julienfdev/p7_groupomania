@@ -19,13 +19,13 @@ exports.signup = async (req, res, next) => {
     //Validators (req.validated.xxx) (en MIDDLEWARE avec argument selon scope!!)
     try {
         // First thing is to hash the password using bcrypt
-        const hash = await bcrypt.hash(req.body.password, 10);
+        const hash = await bcrypt.hash(req.validated.password, 10);
         // Generating the unique slug
-        const slug = slugGenerator(req.body.nickname);
+        const slug = slugGenerator(req.validated.nickname);
         // Object construct using the build method
         const userSignup = User.build({
-            email: req.body.email,
-            nickname: req.body.nickname,
+            email: req.validated.email,
+            nickname: req.validated.nickname,
             password: hash,
             slug: slug
         });

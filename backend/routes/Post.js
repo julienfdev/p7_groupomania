@@ -6,12 +6,13 @@ const auth = require('../middlewares/auth');
 const debug = require('../middlewares/debug');
 const multer = require('../middlewares/multer');
 const multipartFormatter = require('../middlewares/multipart-formatter');
+const validators = require('../middlewares/validators');
 
-router.post('/',multer, multipartFormatter, auth, PostCtrl.postPost);
+router.post('/',multer, multipartFormatter, auth, validators.postPost, PostCtrl.postPost);
 router.post('/:slug/like',auth, PostCtrl.postLike);
-router.post('/:slug/comment', auth, PostCtrl.postComment);
+router.post('/:slug/comment', auth, validators.comment, PostCtrl.postComment);
 
-router.put('/:slug',multer, multipartFormatter, auth, PostCtrl.updatePost);
+router.put('/:slug',multer, multipartFormatter, auth, validators.updatePost, PostCtrl.updatePost);
 router.delete('/:slug', auth, PostCtrl.deletePost);
 
 // Passing a parameter to the controller (isHot? true for hot, false for fresh)

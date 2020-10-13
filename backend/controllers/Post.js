@@ -7,7 +7,8 @@ const permissions = require('../modules/userPermissions');
 const fs = require('fs');
 const {
     formatPost,
-    formatPosts
+    formatPosts,
+    formatComments
 } = require('../modules/formattingFunctions');
 
 
@@ -27,7 +28,7 @@ exports.postPost = async (req, res, next) => {
     try {
         const category = await Category.findOne({
             where: {
-                slug: req.body.categorySlug
+                slug: req.validated.categorySlug
             }
         })
         if (!category) {
@@ -38,9 +39,9 @@ exports.postPost = async (req, res, next) => {
         }
         // If all is well, we can proceed by creating the post object
         const postObject = {
-            slug: slugGenerator(req.body.title),
+            slug: slugGenerator(req.validated.title),
             image_url: `${req.protocol}://${req.get('host')}/${req.file.path}`,
-            title: req.body.title,
+            title: req.validated.title,
             user_id: req.loggedUser.id
         }
         console.log(postObject);
@@ -94,8 +95,8 @@ exports.getPost = async (req, res, next) => {
             };
         }
         const postObject = formatPost(post);
-        // RAJOUTER FONCTION DE FORMATAGE DES COMMENTS UNE FOIS IMPLEMENTE
-        const commentList = await post.getComments();
+        const rawComments = await post.getComments();
+        const commentList = await formatComments(rawComments);
 
         res.status(200).json({
             post: postObject,
@@ -103,7 +104,7 @@ exports.getPost = async (req, res, next) => {
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         errorHandlers.basicHandler(res, error);
     }
 };
@@ -146,11 +147,11 @@ exports.updatePost = async (req, res, next) => {
             imageUrl = `${req.protocol}://${req.get('host')}/${req.file.path}`;
         }
         const postUpdate = {
-            ...req.body,
-            slug: (req.body.title) ? slugGenerator(req.body.title) : post.slug,
+            ...req.validated,
+            slug: (req.validated.title) ? slugGenerator(req.validated.title) : post.slug,
             image_url: imageUrl,
             // If user is admin and is_hot updated, new is_hot, else, old one 
-            is_hot: (req.loggedUser.isAdmin && (req.body.is_hot !== null && req.body.is_hot !== undefined) ? req.body.is_hot : post.is_hot) // If user is admin and isHot updated, new is hot, else, old one 
+            is_hot: (req.loggedUser.isAdmin && (req.validated.is_hot !== null && req.validated.is_hot !== undefined) ? req.validated.is_hot : post.is_hot) // If user is admin and isHot updated, new is hot, else, old one 
         }
         await post.update(postUpdate);
         res.status(200).json({
@@ -208,24 +209,24 @@ const likeLogicHandler = async (req, res, post) => {
     })
     // If we don't found the user, then the like status provided can't be 0
     if (!postAlreadyLiked[0]) {
-        if (req.body.like_status === 0) {
+        if (req.validated.like_status === 0) {
             throw {
                 status: 400,
                 message: 'Invalid Like Request'
             };
         }
         await post.createLike({
-            like_status: req.body.like_status,
+            like_status: req.validated.like_status,
             user_id: req.loggedUser.id
         });
         await post.update({
-            likes: post.likes += req.body.like_status
+            likes: post.likes += req.validated.like_status
         });
         res.status(200).json({
             message: 'like Status updated'
         });
         // If user already liked or disliked, it can only be a "back to neutral request", if it's not : error
-    } else if (req.body.like_status !== 0) {
+    } else if (req.validated.like_status !== 0) {
         throw {
             status: 400,
             message: 'Invalid Like Request'
