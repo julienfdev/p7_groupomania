@@ -71,6 +71,7 @@ export default new Vuex.Store({
     },
     USER_SET_SLUG(state, slug) {
       state.currentUser.slug = slug;
+      state.menuItems[2].root = `/user/${slug}` // MOCHE, A CHANGER AVEC UN FIND
     },
     USER_SET_TOKEN(state, token){
       state.currentUser.auth = `Bearer ${token}`;
@@ -80,7 +81,7 @@ export default new Vuex.Store({
     },
     USER_SET_VALID(state, valid){
       state.currentUser.logValid = valid;
-    }
+    },
   },
   actions: {
     // tests if an item into menuItems is the current route, if so, it's pinned "active" and navbar add active class to it, payload is the route this.$route
