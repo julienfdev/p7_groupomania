@@ -1,0 +1,66 @@
+<template>
+<!--
+    Requires Vuex with a menuItems array in store state
+    menuItems: [
+    {
+        name: String,
+        text: String,
+        root: String,
+        active: Boolean,
+        showLog: Boolean
+    },...
+    ]
+    
+ -->
+    <div>
+        <header class="container-fluid bg-dark navbar-container">
+            <nav class="navbar navbar-dark navbar-expand-xl bg-dark navigation-clean-button text-light">
+                <div class="container">
+                    <router-link class="navbar-brand pr-2 mr-0" to='/'><img class="navbar-brand__logo"
+                            src="@/assets/logos/icon.svg" alt="Logo" height="100px">LolGag</router-link>
+                    <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+                        <span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navcol-1">
+                        <MenuList :items="menuItems" :logged="currentUser.logValid" />
+                    </div>
+                </div>
+            </nav>
+        </header>
+    </div>
+</template>
+
+<script>
+    import {
+        mapState
+    } from 'vuex';
+    import MenuList from './navbar/MenuList';
+  //import {closeMenu} from '../router/index';
+
+    export default {
+        name: 'Navbar',
+        data() {
+            return {
+
+            }
+        },
+        computed: {
+            ...mapState(['menuItems', 'currentUser'])
+        },
+        components: {
+            MenuList
+        },
+        methods:{
+
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+    .navbar-brand{
+        font-size: 3em;
+        font-family: 'Bebas Neue', cursive;
+    }
+</style>
