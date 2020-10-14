@@ -4,7 +4,7 @@ export default () => {
         if (!currentUser) {
             throw new Error;
         } else {
-            return currentUser;
+            return JSON.parse(currentUser);
         }
     } catch (error) {
         return undefined;

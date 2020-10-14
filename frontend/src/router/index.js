@@ -36,7 +36,7 @@ router.beforeEach(async (to, from, next) => {
       next();
     }
     else{
-      next(false);
+      router.push('/login');
       //next() // (debug)
     }
   }

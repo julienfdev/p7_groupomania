@@ -45,7 +45,7 @@ exports.login = async (req, res, next) => {
         // login provides email and password, we try to find the user using the email, and fetch email password and slug column
         // findOne returns the instance in db
         const userFound = await User.findOne({
-            attributes: ['email', 'password', 'slug'],
+            attributes: ['email', 'password', 'slug', 'isAdmin'],
             where: {
                 email: req.validated.email
             }
@@ -76,7 +76,9 @@ exports.login = async (req, res, next) => {
                 })
             res.status(200).json({
                 token: token,
-                slug: userFound.slug
+                slug: userFound.slug,
+                isAdmin: userFound.isAdmin,
+                expires: (Math.floor(Date.now() /1000) + config.jwtConfig.expiration)
             })
         }
     } catch (error) {

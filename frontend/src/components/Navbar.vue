@@ -1,5 +1,5 @@
 <template>
-<!--
+    <!--
     Requires Vuex with a menuItems array in store state
     menuItems: [
     {
@@ -21,7 +21,9 @@
                     <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
                         <span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navcol-1">
-                        <MenuList :items="menuItems" :logged="currentUser.logValid" />
+                        <MenuList :items="menuItems" :logged="currentUser.logValid" :admin="currentUser.isAdmin" />
+                        <button v-if="currentUser.logValid" class="btn btn-primary ml-4 navbutton"
+                            @click.prevent="disconnect()">Se déconnecter</button>
                     </div>
                 </div>
             </nav>
@@ -34,7 +36,7 @@
         mapState
     } from 'vuex';
     import MenuList from './navbar/MenuList';
-  //import {closeMenu} from '../router/index';
+    //import {closeMenu} from '../router/index';
 
     export default {
         name: 'Navbar',
@@ -49,18 +51,25 @@
         components: {
             MenuList
         },
-        methods:{
-
+        methods: {
+            async disconnect() {
+                this.$store.commit('USER_SET_VALID', false);
+                localStorage.removeItem('currentUser');
+                this.$router.push('/login');
+            }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-// Fonts
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+    // Fonts
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-    .navbar-brand{
+    .navbar-brand {
         font-size: 3em;
         font-family: 'Bebas Neue', cursive;
+    }
+    .navbutton{
+        font-size: 1.1em;
     }
 </style>

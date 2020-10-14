@@ -10,21 +10,32 @@ export default new Vuex.Store({
         text: 'Accueil',
         root: '/',
         active: false,
-        showLog: true
+        showLog: true,
+        hideNonAdmin: false
       },
       {
         name: 'Fresh',
         text: 'Fresh',
         root: '/fresh',
         active: false,
-        showLog: true
+        showLog: true,
+        hideNonAdmin: false
       },
       {
         name: 'Profile',
         text: 'Profil',
         root: '/placeholder',
         active: false,
-        showLog: true
+        showLog: true,
+        hideNonAdmin: false
+      },
+      {
+        name: 'Administration',
+        text: 'Admin',
+        root: '/admin',
+        active: false,
+        showLog: true,
+        hideNonAdmin: true
       },
       {
         name: 'Login',
@@ -43,7 +54,7 @@ export default new Vuex.Store({
     ],
     currentUser: {
       slug: null,
-      token: null,
+      auth: null,
       isAdmin: false,
       logValid: false
     }
@@ -62,7 +73,7 @@ export default new Vuex.Store({
       state.currentUser.slug = slug;
     },
     USER_SET_TOKEN(state, token){
-      state.currentUser.token = token;
+      state.currentUser.auth = `Bearer ${token}`;
     },
     USER_SET_ADMIN(state, admin){
       state.currentUser.isAdmin = admin;
@@ -89,7 +100,7 @@ export default new Vuex.Store({
         context.commit('USER_SET_TOKEN', payload.token);
         context.commit('USER_SET_ADMIN', payload.isAdmin)
 
-        if ((Date.now() / 1000) > payload.expires) {
+        if (Math.floor((Date.now() / 1000)) > payload.expires) {
           context.commit('USER_SET_VALID', false);
         } else {
           context.commit('USER_SET_VALID', true);

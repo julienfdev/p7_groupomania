@@ -1,7 +1,7 @@
 <template>
     <ul class="nav navbar-nav d-flex flex-grow-1 justify-content-end">
         <li v-for="item of items" :key="item.name">
-            <router-link v-if="item.showLog === logged" class="nav-link" :class="{'active': item.active}"
+            <router-link v-if="(item.showLog === logged) && !(!admin && item.hideNonAdmin)" class="nav-link" :class="{'active': item.active}"
                 :to="item.root">
                 {{item.text}}</router-link>
         </li>
@@ -19,6 +19,10 @@
             logged: {
                 type: Boolean,
                 required: true
+            },
+            admin: {
+                type: Boolean,
+                default: false
             }
         }
     }

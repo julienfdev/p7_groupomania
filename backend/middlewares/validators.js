@@ -183,6 +183,7 @@ exports.userSignup = (req, res, next) => {
 }
 
 exports.userLogin = (req, res, next) => {
+    console.log(req.body)
     try {
         let errorObject = {};
         if (!req.body.email) {
