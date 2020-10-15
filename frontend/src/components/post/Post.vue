@@ -2,7 +2,7 @@
     <div class="col my-2">
         <h3>
             <router-link class="postlink" :to="`/post/${post.slug}`">
-                {{(post.title.length > 40) ? post.title.slice(0, 40) + '...' : post.title }}</router-link>
+                {{(post.title.length > 60) ? post.title.slice(0, 60) + '...' : post.title }}</router-link>
         </h3>
         <div class="d-flex justify-content-center">
             <img :src="post.image_url" :alt="post.title" class="img-fluid rounded shadow" />
@@ -14,10 +14,11 @@
                 <p class="mb-0 mt-1 font-weight-bold">{{post.likes}}</p>
                 <button class="icon icon__down mx-2" @click="dislike(post)"
                     :class="{icon__down__disliked: (post.likedByCurrentUser && post.liked === false), icon__up__disabled: (post.likedByCurrentUser && post.liked === true)}" />
+                <p class="ml-4">par <span class="font-weight-bold">{{post.userName}}</span></p>
             </div>
             <div class="d-flex">
                 <button class="icon icon__trash mx-2"
-                    v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" />
+                    v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" @click="deletion(post)"/>
                 <button class="icon icon__edit mx-2"
                     v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" />
                 <router-link :to="`/post/${post.slug}`">
@@ -35,7 +36,7 @@
 <script>
 import {mapState} from 'vuex';
     import {
-        likePost
+        likePost, deletePost
     } from '../../js/fetchRequests';
 
 
@@ -81,6 +82,11 @@ import {mapState} from 'vuex';
                         post.likedByCurrentUser = true;
                         post.liked = false;
                     }
+                }
+            },
+            async deletion(post) {
+                if(await deletePost(post.slug, this.currentUser.slug)){
+                this.$emit('postDeleted'); // PLUTOT EMETTRE UN ELEMENT ET REFRESH
                 }
             }
         }

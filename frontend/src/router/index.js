@@ -27,6 +27,11 @@ const routes = [{
     name: 'Fresh',
     component: () => import( /* webpackChunkName: "fresh" */ '../views/Fresh.vue')
   },
+  {
+    path: '/post/:slug',
+    name: 'Post',
+    component: () => import( /* webpackChunkName:  "post" */ '../views/DetailPost.vue')
+  }
 ]
 
 const router = new VueRouter({

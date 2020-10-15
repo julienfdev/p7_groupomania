@@ -92,9 +92,10 @@ exports.getPost = async (req, res, next) => {
                 message: 'Post not found'
             };
         }
-        const postObject = formatPost(post, req.loggedUser);
+        const postObject = await formatPost(post, req.loggedUser);
         const rawComments = await post.getComments();
         const commentList = await formatComments(rawComments);
+
 
         res.status(200).json({
             post: postObject,

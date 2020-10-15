@@ -31,8 +31,8 @@ app.use((req, res, next) => {
 
 // Parsing body to json for simple requests
 app.use(bodyParser.json());
-//Sanitizing HTML
-app.use(htmlSanitizer);
+//Sanitizing HTML, not useful with VueJS
+//app.use(htmlSanitizer);
 
 
 

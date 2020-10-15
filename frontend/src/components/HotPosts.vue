@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="row" v-for="post in hotPosts" :key="post.slug">
-            <Post :post="post"/>
+        <div class="row" v-for="post in hotPosts" :key="post.index">
+            <Post :post="post" @postDeleted='onDelete()'/>
         </div>
     </div>
 </template>
@@ -21,6 +21,11 @@
         },
         components: {
             Post
+        },
+        methods: {
+            async onDelete() {
+                this.freshPosts = await getPosts('hot');
+            }
         },
         async beforeMount() {
             this.hotPosts = await getPosts('hot');

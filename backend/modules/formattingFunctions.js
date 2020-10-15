@@ -16,9 +16,6 @@ const formatPost = async (rawPost, user) => {
     }));
     let liked = false;
 
-
-    console.log(likedByUser);
-
     if (likedByUser.length) {
         switch (likedByUser[0].like_status) {
             case 1:
@@ -39,6 +36,7 @@ const formatPost = async (rawPost, user) => {
         createdAt: rawPost.createdAt,
         categorySlug: rawPost.Category.slug,
         userSlug: originalPoster.slug,
+        userName: originalPoster.nickname,
         likedByCurrentUser: ((likedByUser.length) ? true : false),
         liked: liked
     }
@@ -59,7 +57,8 @@ const formatComment = async (rawComment) => {
         slug: rawComment.slug,
         text: rawComment.text,
         postSlug: (await rawComment.getPost()).slug,
-        userSlug: (await rawComment.getUser()).slug
+        userSlug: (await rawComment.getUser()).slug,
+        userName: (await rawComment.getUser()).nickname
     }
     return new Promise((resolve, reject) => {
         resolve(commentEntry)
