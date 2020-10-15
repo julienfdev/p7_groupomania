@@ -1,7 +1,7 @@
 <template>
     <div class="col my-2">
         <h3>
-            <router-link class="postlink" :to="`post/${post.slug}`">
+            <router-link class="postlink" :to="`/post/${post.slug}`">
                 {{(post.title.length > 40) ? post.title.slice(0, 40) + '...' : post.title }}</router-link>
         </h3>
         <div class="d-flex justify-content-center">
@@ -9,13 +9,22 @@
         </div>
         <div class="d-flex justify-content-between mt-2">
             <div class="d-flex">
-                <button class="icon icon__up mx-2"></button>
+                <button class="icon icon__up mx-2" @click='like(post)'
+                    :class="{icon__up__liked: (post.likedByCurrentUser && post.liked === true), icon__up__disabled: (post.likedByCurrentUser && post.liked === false)}" />
                 <p class="mb-0 mt-1 font-weight-bold">{{post.likes}}</p>
-                <button class="icon icon__down mx-2"></button>
+                <button class="icon icon__down mx-2" @click="dislike(post)"
+                    :class="{icon__down__disliked: (post.likedByCurrentUser && post.liked === false), icon__up__disabled: (post.likedByCurrentUser && post.liked === true)}" />
             </div>
-            <router-link :to="`/post/${post.slug}`">
-                <div class="icon icon__comment mx-2" />
-            </router-link>
+            <div class="d-flex">
+                <button class="icon icon__trash mx-2"
+                    v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" />
+                <button class="icon icon__edit mx-2"
+                    v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" />
+                <router-link :to="`/post/${post.slug}`">
+                    <div class="icon icon__comment mx-2" />
+                </router-link>
+            </div>
+
             <!-- AJOUTER BOUTONS EDIT ET DELETE EN V-IF -->
             <!-- FREEZEFRAME -->
         </div>
@@ -24,12 +33,55 @@
 </template>
 
 <script>
+import {mapState} from 'vuex';
+    import {
+        likePost
+    } from '../../js/fetchRequests';
+
+
     export default {
         name: 'Post',
+        data() {
+            return {
+            }
+        },
+        computed: {
+            ...mapState(['currentUser'])
+        },
         props: {
             post: {
                 type: Object,
                 required: true
+            }
+        },
+        methods: {
+            async like(post) {
+                if (post.likedByCurrentUser && post.liked === true) {
+                    if (await likePost(post.slug, this.currentUser.slug, 0)) {
+                        post.likes--;
+                        post.likedByCurrentUser = false;
+                    }
+                } else if (!post.likedByCurrentUser) {
+                    if (likePost(post.slug, this.currentUser.slug, 1)) {
+                        post.likes++;
+                        post.likedByCurrentUser = true;
+                        post.liked = true;
+                    }
+                }
+            },
+            async dislike(post) {
+                if (post.likedByCurrentUser && post.liked === false) {
+                    if (await likePost(post.slug, this.currentUser.slug, 0)) {
+                        post.likes++;
+                        post.likedByCurrentUser = false;
+                    }
+                } else if (!post.likedByCurrentUser) {
+                    if (await likePost(post.slug, this.currentUser.slug, -1)) {
+                        post.likes--;
+                        post.likedByCurrentUser = true;
+                        post.liked = false;
+                    }
+                }
             }
         }
     }
@@ -59,6 +111,18 @@
             &:hover {
                 background-color: #6f6;
             }
+
+            &__liked {
+                background-color: #6f6;
+            }
+
+            &__disabled {
+                background-color: #aaa;
+
+                &:hover {
+                    background-color: #aaa !important;
+                }
+            }
         }
 
         &__down {
@@ -67,6 +131,18 @@
             &:hover {
                 background-color: #f66;
             }
+
+            &__disliked {
+                background-color: #f66;
+            }
+
+            &__disabled {
+                background-color: #aaa;
+
+                &:hover {
+                    background-color: #aaa !important;
+                }
+            }
         }
 
         &__comment {
@@ -74,6 +150,22 @@
 
             &:hover {
                 background-color: #bbf;
+            }
+        }
+
+        &__edit {
+            mask-image: url('../../assets/icons/edit.svg');
+
+            &:hover {
+                background-color: #bbf;
+            }
+        }
+
+        &__trash {
+            mask-image: url('../../assets/icons/trash.svg');
+
+            &:hover {
+                background-color: #fbb;
             }
         }
     }

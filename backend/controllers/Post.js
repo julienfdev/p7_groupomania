@@ -42,7 +42,6 @@ exports.postPost = async (req, res, next) => {
             title: req.validated.title,
             user_id: req.loggedUser.id
         }
-        console.log(postObject);
         // Once created, we add it to the Category:
         await category.createPost(postObject);
 
@@ -71,6 +70,7 @@ exports.postLike = async (req, res, next) => {
         }
         return await likeLogicHandler(req, res, post);
     } catch (error) {
+        console.error(error);
         errorHandlers.basicHandler(res, error);
     }
 };
@@ -92,7 +92,7 @@ exports.getPost = async (req, res, next) => {
                 message: 'Post not found'
             };
         }
-        const postObject = formatPost(post);
+        const postObject = formatPost(post, req.loggedUser);
         const rawComments = await post.getComments();
         const commentList = await formatComments(rawComments);
 
@@ -263,7 +263,7 @@ exports.getPage = async (req, res, next, hotPage) => {
             ]
         });
         if (rawHotPostArray) {
-            res.status(200).json(formatPosts(rawHotPostArray));
+            res.status(200).json(await formatPosts(rawHotPostArray, req.loggedUser));
         } else {
             res.status(204).json();
         }
@@ -296,17 +296,17 @@ exports.getCategoryPosts = async (req, res, next) => {
         }
         const rawPostArray = await category.getPosts({
             include: {
-                model: Category,
-                required: true
-            },
+                    model: Category,
+                    required: true
+                },
             limit: postPerPage,
             offset,
             order: [
                 ['createdAt', 'DESC']
             ]
         });
-        if (rawPostArray.length) {
-            res.status(200).json(formatPosts(rawPostArray));
+        if (rawPostArray) {
+            res.status(200).json(await formatPosts(rawPostArray, req.loggedUser));
         } else {
             res.status(204).json();
         }
@@ -341,7 +341,9 @@ exports.postComment = async (req, res, next) => {
         }
         await post.createComment(comment)
 
-        res.status(201).json({commentSlug: comment.slug});
+        res.status(201).json({
+            commentSlug: comment.slug
+        });
 
     } catch (error) {
         console.error(error.message);

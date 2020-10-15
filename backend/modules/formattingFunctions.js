@@ -1,14 +1,35 @@
-
-const formatPosts = (rawPosts) => {
+const formatPosts = async (rawPosts, user) => {
     let posts = [];
     for (post of rawPosts) {
-        posts.unshift(formatPost(post));
+        posts.unshift(await formatPost(post, user));
     }
     return posts;
 }
 
-const formatPost = (rawPost) => {
-    
+const formatPost = async (rawPost, user) => {
+    const originalPoster = await rawPost.getUser();
+    const likedByUser = (await rawPost.getLikes({
+        attributes: ['like_status'],
+        where: {
+            user_id: user.id
+        }
+    }));
+    let liked = false;
+
+
+    console.log(likedByUser);
+
+    if (likedByUser.length) {
+        switch (likedByUser[0].like_status) {
+            case 1:
+                liked = true;
+                break;
+            case -1:
+                liked = false;
+                break;
+        }
+    }
+
     const postEntry = {
         slug: rawPost.slug,
         likes: rawPost.likes,
@@ -16,7 +37,10 @@ const formatPost = (rawPost) => {
         title: rawPost.title,
         is_hot: rawPost.is_hot,
         createdAt: rawPost.createdAt,
-        categorySlug: rawPost.Category.slug
+        categorySlug: rawPost.Category.slug,
+        userSlug: originalPoster.slug,
+        likedByCurrentUser: ((likedByUser.length) ? true : false),
+        liked: liked
     }
     return postEntry;
 }

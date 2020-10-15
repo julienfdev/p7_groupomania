@@ -22,8 +22,12 @@
                         <span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navcol-1">
                         <MenuList :items="menuItems" :logged="currentUser.logValid" :admin="currentUser.isAdmin" />
-                        <button v-if="currentUser.logValid" class="btn btn-primary ml-4 navbutton"
-                            @click.prevent="disconnect()">Se déconnecter</button>
+                        <div class="d-lg-block d-flex justify-content-between ml-lg-4">
+                            <button v-if="currentUser.logValid" class="btn btn-primary mr-lg-3 navbutton"
+                                @click.prevent="disconnect()">Poster une image</button>
+                            <button v-if="currentUser.logValid" class="btn btn-primary navbutton"
+                                @click.prevent="disconnect()">Se déconnecter</button>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -69,7 +73,8 @@
         font-size: 3em;
         font-family: 'Bebas Neue', cursive;
     }
-    .navbutton{
+
+    .navbutton {
         font-size: 1.1em;
     }
 </style>

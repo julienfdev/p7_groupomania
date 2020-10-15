@@ -8,7 +8,7 @@
 
 <script>
     import {
-        getPosts
+        getPosts,
     } from '@/js/fetchRequests';
     import Post from './post/Post';
 
