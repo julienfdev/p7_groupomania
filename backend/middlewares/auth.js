@@ -21,7 +21,7 @@ const authMiddleware = async (req, res, next) => {
         const token = req.headers.authorization;
         const providedSlug = req.body.userSlug;
         // If token or slug not found, throw error
-        if (!token || !providedSlug) {
+        if (!token || (!providedSlug && req.method !== 'GET')) {
             throw {
                 status: 400,
                 message: 'Missing Auth data'
@@ -64,23 +64,28 @@ const authMiddleware = async (req, res, next) => {
                 message: 'User account isn\'t valid anymore'
             }
         }
-        // If the slug provided into the body mismatch the token, someone is trying to use his token with another userSlug
-        if (!(userMatch.slug === req.body.userSlug)) {
-            throw {
-                status: 403,
-                message: 'Slug mismatch, possible forgery attempt'
+        if (req.method !== 'GET') {
+            // If the slug provided into the body mismatch the token, someone is trying to use his token with another userSlug
+            if (!(userMatch.slug === req.body.userSlug)) {
+                throw {
+                    status: 403,
+                    message: 'Slug mismatch, possible forgery attempt'
+                }
             }
         }
-
         // If token is valid, user still exists and is legit, we create an object into the request, with the loggedUser slug and the admin status bool 
         req.loggedUser = {};
         req.loggedUser.isAdmin = userMatch.isAdmin;
         req.loggedUser.slug = userMatch.slug;
         req.loggedUser.id = userMatch.id
-        delete req.body.userSlug; // We don't need this field anymore, it's stored in loggedUser.slug
+        if (req.body.userSlug) {
+            delete req.body.userSlug;
+        }
+        // We don't need this field anymore, it's stored in loggedUser.slug
         next();
     } catch (error) {
-        errorHandlers.multerUndo(req);           // Delete upload if request unauthorized
+        console.error(error);
+        errorHandlers.multerUndo(req); // Delete upload if request unauthorized
         errorHandlers.basicHandler(res, error);
     }
     //next();

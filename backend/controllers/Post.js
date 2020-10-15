@@ -262,13 +262,13 @@ exports.getPage = async (req, res, next, hotPage) => {
                 ['createdAt', 'DESC']
             ]
         });
-        if (rawHotPostArray.length) {
+        if (rawHotPostArray) {
             res.status(200).json(formatPosts(rawHotPostArray));
         } else {
             res.status(204).json();
         }
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         errorHandlers.basicHandler(res, error);
     }
 

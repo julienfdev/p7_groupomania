@@ -1,6 +1,3 @@
-const {
-    post
-} = require("../app");
 
 const formatPosts = (rawPosts) => {
     let posts = [];
@@ -11,6 +8,7 @@ const formatPosts = (rawPosts) => {
 }
 
 const formatPost = (rawPost) => {
+    
     const postEntry = {
         slug: rawPost.slug,
         likes: rawPost.likes,

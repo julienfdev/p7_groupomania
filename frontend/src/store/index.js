@@ -54,7 +54,7 @@ export default new Vuex.Store({
     ],
     currentUser: {
       slug: null,
-      auth: null,
+      token: null,
       isAdmin: false,
       logValid: false
     }
@@ -74,7 +74,7 @@ export default new Vuex.Store({
       state.menuItems[2].root = `/user/${slug}` // MOCHE, A CHANGER AVEC UN FIND
     },
     USER_SET_TOKEN(state, token){
-      state.currentUser.auth = `Bearer ${token}`;
+      state.currentUser.token = token;
     },
     USER_SET_ADMIN(state, admin){
       state.currentUser.isAdmin = admin;
@@ -109,6 +109,12 @@ export default new Vuex.Store({
       } else {
         context.commit('USER_SET_VALID', false);
       }
+    }
+  },
+  getters: {
+    authorizationHeader(state) {
+      console.log(state.currentUser.token);
+      return `Bearer ${state.currentUser.token}`;
     }
   },
   modules: {}

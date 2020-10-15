@@ -7,12 +7,16 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import HelloWorld from '@/components/HelloWorld.vue';
+import {getHotPosts} from '@/js/fetchRequests';
 
 export default {
   name: 'Home',
   components: {
     HelloWorld
+  },
+  mounted(){
+    getHotPosts();
   }
 }
 </script>
