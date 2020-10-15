@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Hot from '../views/Hot.vue'
 import store from '../store/index';
 import userLocalStorageFetch from '../js/userLocalStorageFetch'
 
@@ -8,8 +8,9 @@ Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'Hot',
+    component: Hot,
+    alias: '/hot'
   },
   {
     path: '/login',
@@ -20,6 +21,11 @@ const routes = [{
     path: '/signup',
     name: 'Signup',
     component: () => import( /* webpackChunkName: "signup" */ '../views/Signup.vue')
+  },
+  {
+    path: '/fresh',
+    name: 'Fresh',
+    component: () => import( /* webpackChunkName: "fresh" */ '../views/Fresh.vue')
   },
 ]
 

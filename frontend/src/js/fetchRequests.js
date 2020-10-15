@@ -1,18 +1,17 @@
 import store from '../store/index';
 import config from './config'
 
-export const getHotPosts = async () => {
+export const getPosts = async (category, page) => {
     try {
         const authorizationHeader = store.getters.authorizationHeader;
-        console.log(authorizationHeader);
-        const apiCall = store.getters.apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/post/hot`;
+        const apiCall = store.getters.apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/post/${category}/${(page)? page : ''}`;
     
         const fetchResponse = await fetch(apiCall, {
             headers: {
                 'Authorization': authorizationHeader
             }
         })
-        console.log(await fetchResponse.json());
+        return fetchResponse.json();
     } catch (error) {
         // Faire de la gestion d'erreurs
         console.error(error);

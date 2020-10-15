@@ -259,7 +259,7 @@ exports.getPage = async (req, res, next, hotPage) => {
                 required: true
             },
             order: [
-                ['createdAt', 'DESC']
+                ['createdAt', 'ASC']
             ]
         });
         if (rawHotPostArray) {

@@ -6,8 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     menuItems: [{
-        name: 'Home',
-        text: 'Accueil',
+        name: 'Hot',
+        text: 'Hot',
         root: '/',
         active: false,
         showLog: true,
