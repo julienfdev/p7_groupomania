@@ -24,5 +24,8 @@
         &__alert {
             text-shadow: none;
         }
+        &.col-xl-5{
+            max-width: 600px;
+        }
     }
 </style>

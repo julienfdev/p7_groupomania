@@ -118,7 +118,7 @@
                     };
                     if (await postPost(postObject, file, this.$store.state.currentUser.slug)) {
                         this.closeModal();
-                        if (!this.$route.path === '/fresh') {
+                        if (!(this.$route.path === '/fresh')) {
                             this.$router.push('/fresh');
                         } else {
                             this.$router.go();
