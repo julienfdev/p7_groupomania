@@ -2,8 +2,8 @@
     <div>
         <div class="container">
             <div class="row mt-2 mt-lg-3 d-flex justify-content-center">
-                <div class="col-lg-8" v-if="postObject.post">
-                    <Post :post="postObject.post" />
+                <div class="col-lg-8">
+                    <Post :post="postObject.post" @postDeleted="deletion()"/>
                     <Comments :commentArray="postObject.commentList" />
                 </div>
             </div>
@@ -12,8 +12,8 @@
 </template>
 
 <script>
-    import Post from '../components/post/Post';
-    import Comments from '../components/post/Comments';
+    import Post from '@/components/post/Post';
+    import Comments from '@/components/post/Comments';
     import {
         getPost
     } from '../js/fetchRequests';
@@ -31,6 +31,12 @@
         },
         async beforeMount() {
             this.postObject = await getPost(this.$route.params.slug);
+        },
+        methods: {
+            // If the post is deleted, we go back to the home page
+            deletion (){
+                this.$router.push('/');
+            }
         }
     }
 </script>

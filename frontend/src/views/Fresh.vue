@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import FreshPosts from '../components/FreshPosts';
+  import FreshPosts from '@/components/FreshPosts';
   // @ is an alias to /src
 
   export default {

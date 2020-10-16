@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import Identification from '../components/id/Identification';
+    import Identification from '@/components/id/Identification';
 
     export default {
         name: 'Signup',
@@ -20,5 +20,9 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .signup {
+        &__alert {
+            text-shadow: none;
+        }
+    }
 </style>

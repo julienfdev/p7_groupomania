@@ -19,9 +19,11 @@ try {
     });
 
     if(response.status === 201){
+        // If we have succeded in creating the user, login with the same credentials
         login(object);
     }
     else if(response.status === 400){
+        // error handling
         const responseObject = await response.json();
         switch(responseObject.errorList[0].fail){
             case 'not_unique':

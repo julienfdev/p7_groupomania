@@ -42,7 +42,7 @@ router.beforeEach(async (to, from, next) => {
   // Checks if user is valid, else directs to login page (user can still go to signup)
   if (!(to.path === '/login' || to.path === '/signup')) {
     const userLocalStorage = userLocalStorageFetch();
-    await store.dispatch('setUser', userLocalStorage);  // Surement pas idéal mais ça va le faire
+    await store.dispatch('setUser', userLocalStorage);  // the setUser contains the check to verify the user is valid.
     if(store.state.currentUser.logValid){
       next();
     }
@@ -57,7 +57,7 @@ router.beforeEach(async (to, from, next) => {
 });
 
 router.afterEach((to) => {
-  store.dispatch('updateActive', to);
+  store.dispatch('updateActive', to); // updateActive is a lame function to highlight the current menu item, pretty sure there's another solution.
 })
 
 export default router

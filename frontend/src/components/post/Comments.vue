@@ -46,6 +46,7 @@ import {mapState} from 'vuex';
     .comments {
         &__content {
             border-radius: 1em;
+            background-color: darken(#4b545c, 5);
 
             &__username {
                 min-width: 30%;

@@ -20,6 +20,7 @@ export default async (object) => {
 
         // If user auth
         if (response.status === 200) {
+            // Create the login object into the localStorage and pushing hot page
             localStorage.setItem('currentUser', JSON.stringify(await response.json()));
             router.push('/');
         } else if (response.status === 404) {

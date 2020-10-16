@@ -7,7 +7,7 @@
         <div class="d-flex justify-content-center">
             <img :src="post.image_url" :alt="post.title" class="img-fluid rounded shadow" />
         </div>
-        <div class="d-flex justify-content-between mt-2">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center mt-2">
             <div class="d-flex">
                 <button class="icon icon__up mx-2" @click='like(post)'
                     :class="{icon__up__liked: (post.likedByCurrentUser && post.liked === true), icon__up__disabled: (post.likedByCurrentUser && post.liked === false)}" />
@@ -86,7 +86,8 @@ import {mapState} from 'vuex';
             },
             async deletion(post) {
                 if(await deletePost(post.slug, this.currentUser.slug)){
-                this.$emit('postDeleted'); // PLUTOT EMETTRE UN ELEMENT ET REFRESH
+                    // If we successfully deleted the post, we emit an element to the parent to handle it (either by refreshing the dataset or pushing the home page)
+                this.$emit('postDeleted');
                 }
             }
         }

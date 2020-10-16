@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // Menu items is there to manage the display of differents items depending on the login status and admin status
     menuItems: [{
         name: 'Hot',
         text: 'Hot',
@@ -24,7 +25,7 @@ export default new Vuex.Store({
       {
         name: 'Profile',
         text: 'Profil',
-        root: '/placeholder',
+        root: '/placeholder',   // To be updated when user logged in
         active: false,
         showLog: true,
         hideNonAdmin: false
@@ -42,14 +43,16 @@ export default new Vuex.Store({
         text: 'S\'identifier',
         root: '/login',
         active: false,
-        showLog: false
+        showLog: false,
+        hideNonAdmin: false
       },
       {
         name: 'Signup',
         text: 'S\'enregistrer',
         root: '/signup',
         active: false,
-        showLog: false
+        showLog: false,
+        hideNonAdmin: false
       }
     ],
     currentUser: {
@@ -71,7 +74,10 @@ export default new Vuex.Store({
     },
     USER_SET_SLUG(state, slug) {
       state.currentUser.slug = slug;
-      state.menuItems[2].root = `/user/${slug}` // MOCHE, A CHANGER AVEC UN FIND
+      const profileItem = state.menuItems.find((item) => {
+        return item.name === 'Profile';
+      })
+     profileItem.root = `/user/${slug}`;
     },
     USER_SET_TOKEN(state, token){
       state.currentUser.token = token;
@@ -101,6 +107,7 @@ export default new Vuex.Store({
         context.commit('USER_SET_TOKEN', payload.token);
         context.commit('USER_SET_ADMIN', payload.isAdmin)
 
+        // Compares the expiration date provided during login with the current date
         if (Math.floor((Date.now() / 1000)) > payload.expires) {
           context.commit('USER_SET_VALID', false);
         } else {
@@ -113,7 +120,6 @@ export default new Vuex.Store({
   },
   getters: {
     authorizationHeader(state) {
-      console.log(state.currentUser.token);
       return `Bearer ${state.currentUser.token}`;
     }
   },
