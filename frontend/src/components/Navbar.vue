@@ -23,9 +23,9 @@
                     <div class="collapse navbar-collapse" id="navcol-1">
                         <MenuList :items="menuItems" :logged="currentUser.logValid" :admin="currentUser.isAdmin" />
                         <div class="d-lg-block d-flex justify-content-between ml-lg-4">
-                            <button v-if="currentUser.logValid" class="btn btn-primary mr-lg-3 navbutton" @click="addPost()">Poster une image</button>
+                            <button v-if="currentUser.logValid" class="btn btn-primary mr-lg-3 navbutton" @click="addPost()">Poster</button>
                             <button v-if="currentUser.logValid" class="btn btn-primary navbutton"
-                                @click.prevent="disconnect()">Se déconnecter</button>
+                                @click.prevent="disconnect()">Deconnexion</button>
                         </div>
                     </div>
                 </div>

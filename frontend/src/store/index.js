@@ -60,7 +60,9 @@ export default new Vuex.Store({
       token: null,
       isAdmin: false,
       logValid: false
-    }
+    },
+    categories: {},
+    displayedPosts:{}
   },
   mutations: {
     SET_ACTIVE(state, index) {
@@ -88,6 +90,9 @@ export default new Vuex.Store({
     USER_SET_VALID(state, valid){
       state.currentUser.logValid = valid;
     },
+    CATEGORIES_POPULATE(state, payload) {
+      state.categories = payload;
+    }
   },
   actions: {
     // tests if an item into menuItems is the current route, if so, it's pinned "active" and navbar add active class to it, payload is the route this.$route
@@ -116,7 +121,7 @@ export default new Vuex.Store({
       } else {
         context.commit('USER_SET_VALID', false);
       }
-    }
+    },
   },
   getters: {
     authorizationHeader(state) {

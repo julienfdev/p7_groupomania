@@ -7,18 +7,20 @@
         <div class="d-flex justify-content-center">
             <img :src="post.image_url" :alt="post.title" class="img-fluid rounded shadow" />
         </div>
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center mt-2">
-            <div class="d-flex">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center mt-2 mb-0">
+            <div class="d-flex align-items-center">
                 <button class="icon icon__up mx-2" @click='like(post)'
                     :class="{icon__up__liked: (post.likedByCurrentUser && post.liked === true), icon__up__disabled: (post.likedByCurrentUser && post.liked === false)}" />
-                <p class="mb-0 mt-1 font-weight-bold">{{post.likes}}</p>
+                <p class="mb-0 mt-2 font-weight-bold">{{post.likes}}</p>
                 <button class="icon icon__down mx-2" @click="dislike(post)"
                     :class="{icon__down__disliked: (post.likedByCurrentUser && post.liked === false), icon__up__disabled: (post.likedByCurrentUser && post.liked === true)}" />
-                <p class="ml-4">par <span class="font-weight-bold">{{post.userName}}</span></p>
+                <p class="ml-4 mb-0 align-self-end">par <span class="font-weight-bold">{{post.userName}}</span></p>
             </div>
             <div class="d-flex">
-                <button class="icon icon__trash mx-2"
-                    v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" @click="deletion(post)"/>
+                <ToggleButton v-if="currentUser.isAdmin" v-model="hotStatus" class="mx-2 mb-0" name="Hot"
+                    :labels="{checked: 'Hot !', unchecked: 'Fresh'}" :width="70" :height="24" :color="{checked: '#217185', unchecked: '#343a40'}" :font-size="12" @change="toggleEvent" />
+                <button class="icon icon__trash mx-2" v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)"
+                    @click="deletion(post)" />
                 <button class="icon icon__edit mx-2"
                     v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" />
                 <router-link :to="`/post/${post.slug}`">
@@ -34,16 +36,27 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
     import {
-        likePost, deletePost
+        mapState
+    } from 'vuex';
+    import {
+        likePost,
+        deletePost,
+        updatePost
     } from '../../js/fetchRequests';
+    import {
+        ToggleButton
+    } from 'vue-js-toggle-button'
 
 
     export default {
         name: 'Post',
+        components: {
+            ToggleButton
+        },
         data() {
             return {
+                hotStatus: this.post.is_hot
             }
         },
         computed: {
@@ -85,12 +98,22 @@ import {mapState} from 'vuex';
                 }
             },
             async deletion(post) {
-                if(await deletePost(post.slug, this.currentUser.slug)){
+                if (await deletePost(post.slug, this.currentUser.slug)) {
                     // If we successfully deleted the post, we emit an element to the parent to handle it (either by refreshing the dataset or pushing the home page)
-                this.$emit('postDeleted');
+                    this.$emit('postDeleted');
+                }
+            },
+            async toggleEvent(event) {
+                const postObject = {
+                    slug: this.post.slug,
+                    is_hot: event.value
+                }
+                if (await !updatePost(postObject, null, this.currentUser)) {
+                    this.hotStatus = !this.hotStatus;
                 }
             }
-        }
+        },
+        beforeMount() {}
     }
 </script>
 
@@ -186,7 +209,6 @@ import {mapState} from 'vuex';
             color: #aaa;
         }
     }
-
     button {
         border: none;
     }

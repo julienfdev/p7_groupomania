@@ -24,7 +24,7 @@
         },
         methods: {
             async onDelete() {
-                this.freshPosts = await getPosts('hot');
+                this.hotPosts = await getPosts('hot');
             }
         },
         async beforeMount() {

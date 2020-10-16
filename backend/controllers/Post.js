@@ -260,7 +260,7 @@ exports.getPage = async (req, res, next, hotPage) => {
                 required: true
             },
             order: [
-                ['createdAt', 'ASC']
+                hotPage ? ['updatedAt', 'ASC'] : ['createdAt', 'ASC']
             ]
         });
         if (rawHotPostArray) {
@@ -297,13 +297,13 @@ exports.getCategoryPosts = async (req, res, next) => {
         }
         const rawPostArray = await category.getPosts({
             include: {
-                    model: Category,
-                    required: true
-                },
+                model: Category,
+                required: true
+            },
             limit: postPerPage,
             offset,
             order: [
-                ['createdAt', 'DESC']
+                ['createdAt', 'ASC']
             ]
         });
         if (rawPostArray) {

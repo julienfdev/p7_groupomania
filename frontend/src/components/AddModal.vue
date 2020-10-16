@@ -5,7 +5,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Poster une image</h5>
                 </div>
-                <form class="form" id="addPostForm" novalidate @submit.prevent>
+                <form class="form" id="addPostForm" novalidate @submit.prevent="postImage">
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="col">
@@ -13,12 +13,23 @@
                                     <div class="form-group">
                                         <label class="form__title" for="addPostTitle">Titre</label>
                                         <input class="form-control" type="text" name="addPostTitle" id="addPostTitle">
+                                        <div v-show="!titleValid" class="alert alert-info mt-1" role="alert">
+                                            Veuillez entrer un titre valide!
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form__title" for="categorySelector">Catégorie</label>
+                                        <select class="form-control" id="categorySelector">
+                                            <option v-for="category of categories" :value="category.slug"
+                                                :key="category.index">{{category.name}}</option>
+                                        </select>
                                     </div>
                                     <hr />
                                 </div>
                             </div>
                         </div>
-                        <div class="row d-flex justify-content-center">
+                        <div class="row d-flex flex-column align-items-center">
                             <div class="previewer m-0 p-0 shadow d-flex flex-column">
                                 <img src="@/assets/image-placeholder.jpg" alt="Image" class="img-fluid"
                                     id='filePreviewer'>
@@ -29,6 +40,9 @@
                                         @change="previewImage" multiple="false"
                                         accept="image/jpg, image/jpeg, image/png, image/gif">
                                 </div>
+                            </div>
+                            <div v-show="!imageValid" class="col-9 alert alert-info mt-3" role="alert">
+                                Veuillez choisir une image!
                             </div>
                         </div>
                     </div>
@@ -43,8 +57,27 @@
 </template>
 
 <script>
+    import {
+        mapState
+    } from 'vuex';
+    import {
+        postPost
+    } from '@/js/fetchRequests';
+    import {
+        validatePost
+    } from '@/js/validation'
+
     export default {
         name: "AddModal",
+        data() {
+            return {
+                titleValid: true,
+                imageValid: true
+            }
+        },
+        computed: {
+            ...mapState(['categories'])
+        },
         methods: {
             previewImage(files) {
                 const acceptedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
@@ -62,12 +95,39 @@
                 }
             },
             closeModal() {
+                // Ajouter des v-if et des infobulles
+                this.titleValid = true;
+                this.imageValid = true;
                 document.querySelector('#addPostForm').reset();
                 document.querySelector('#fileSelector').value = null;
                 const img = document.querySelector('#filePreviewer');
                 img.setAttribute('src', require('@/assets/image-placeholder.jpg'));
 
                 window.$('#addPostModal').modal('hide');
+            },
+            async postImage(event) {
+                const postValid = validatePost(event.target);
+                if (postValid === true) {
+                    const file = event.target.querySelector('#fileSelector').files[0];
+                    const category = event.target.querySelector('#categorySelector').value;
+                    const title = event.target.querySelector('#addPostTitle').value
+
+                    const postObject = {
+                        categorySlug: category,
+                        title
+                    };
+                    if (await postPost(postObject, file, this.$store.state.currentUser.slug)) {
+                        this.closeModal();
+                        if (!this.$route.path === '/fresh') {
+                            this.$router.push('/fresh');
+                        } else {
+                            this.$router.go();
+                        }
+                    }
+                } else {
+                    this.imageValid = postValid.image;
+                    this.titleValid = postValid.title;
+                }
             }
         }
     }

@@ -33,7 +33,6 @@ exports.comment = (req, res, next) => {
 
 exports.postPost = (req, res, next) => {
     try {
-        console.log(req.body);
         let errorObject = {};
         // Missing parameters
         if (!req.body.categorySlug) {
@@ -98,7 +97,7 @@ exports.updatePost = (req, res, next) => {
         } else if (req.body.title) {
             req.validated.title = req.body.title;
         }
-        if (req.body.is_hot) {
+        if (req.body.is_hot !== undefined && req.body.is_hot !== null) {
             if (typeof req.body.is_hot !== 'boolean') {
                 errorObject.is_hot = 'type';
             } else {
@@ -183,7 +182,6 @@ exports.userSignup = (req, res, next) => {
 }
 
 exports.userLogin = (req, res, next) => {
-    console.log(req.body)
     try {
         let errorObject = {};
         if (!req.body.email) {

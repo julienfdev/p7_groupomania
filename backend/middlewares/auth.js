@@ -17,7 +17,6 @@ const User = require('../models/User');
 // It handles errors and write the loggedUser into the request before calling next() if user is legit
 const authMiddleware = async (req, res, next) => {
     try {
-        console.log(req.body);
         // Each request body must include a "userSlug" - provided to the frontend after login, and a token
         const token = req.headers.authorization;
         const providedSlug = req.body.userSlug;

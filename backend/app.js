@@ -16,6 +16,7 @@ const apiVersion = 'v1';
 const userRouter = require('./routes/User');
 const postRouter = require('./routes/Post');
 const commentRouter = require('./routes/Comment');
+const categoryRouter = require('./routes/Category');
 
 //SQL Connection and sync
 sqlFunctions.sqlInit();
@@ -40,6 +41,7 @@ app.use(bodyParser.json());
 app.use(`/api/${apiVersion}/user`, userRouter);
 app.use(`/api/${apiVersion}/post`, postRouter);
 app.use(`/api/${apiVersion}/comments`, commentRouter)
+app.use(`/api/${apiVersion}/category`, categoryRouter)
 
 app.use('/public', express.static(__dirname + '/public'))
 
