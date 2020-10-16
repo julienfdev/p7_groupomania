@@ -23,8 +23,7 @@
                     <div class="collapse navbar-collapse" id="navcol-1">
                         <MenuList :items="menuItems" :logged="currentUser.logValid" :admin="currentUser.isAdmin" />
                         <div class="d-lg-block d-flex justify-content-between ml-lg-4">
-                            <button v-if="currentUser.logValid" class="btn btn-primary mr-lg-3 navbutton"
-                                @click.prevent="disconnect()">Poster une image</button>
+                            <button v-if="currentUser.logValid" class="btn btn-primary mr-lg-3 navbutton" @click="addPost()">Poster une image</button>
                             <button v-if="currentUser.logValid" class="btn btn-primary navbutton"
                                 @click.prevent="disconnect()">Se déconnecter</button>
                         </div>
@@ -60,6 +59,12 @@
                 this.$store.commit('USER_SET_VALID', false);
                 localStorage.removeItem('currentUser');
                 this.$router.push('/login');
+            },
+            addPost() {
+                window.$('#addPostModal').modal({
+                    backdrop: 'static',
+                    show: true
+                });
             }
         }
     }

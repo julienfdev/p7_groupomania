@@ -2,6 +2,7 @@
   <div id="app" class="px-0">
     <Navbar class="navbarComponent mb-2 mb-lg-4" />
     <router-view/>
+    <AddModal />
   </div>
 </template>
 
@@ -36,12 +37,14 @@
 </style>
 
 <script>
-  import Navbar from './components/Navbar'
+  import Navbar from '@/components/Navbar';
+  import AddModal from '@/components/AddModal'
 
   export default {
     name: 'App',
     components: {
-      Navbar
+      Navbar,
+      AddModal
     }
   }
 </script>
