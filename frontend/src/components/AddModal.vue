@@ -5,15 +5,14 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Poster une image</h5>
                 </div>
-                <form class="form">
+                <form class="form" id="addPostForm" novalidate @submit.prevent>
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="col">
                                 <div class="col">
                                     <div class="form-group">
                                         <label class="form__title" for="addPostTitle">Titre</label>
-                                        <input class="form-control" type="text" name="addPostTitle" id="addPostTitle"
-                                            required>
+                                        <input class="form-control" type="text" name="addPostTitle" id="addPostTitle">
                                     </div>
                                     <hr />
                                 </div>
@@ -28,7 +27,7 @@
                                         for="fileSelector">Ajouter</label>
                                     <input type="file" name="fileSelector" id="fileSelector" class="fileSelector"
                                         @change="previewImage" multiple="false"
-                                        accept="image/jpg, image/jpeg, image/png, image/gif" required>
+                                        accept="image/jpg, image/jpeg, image/png, image/gif">
                                 </div>
                             </div>
                         </div>
@@ -63,6 +62,7 @@
                 }
             },
             closeModal() {
+                document.querySelector('#addPostForm').reset();
                 document.querySelector('#fileSelector').value = null;
                 const img = document.querySelector('#filePreviewer');
                 img.setAttribute('src', require('@/assets/image-placeholder.jpg'));
@@ -92,7 +92,7 @@
         width: 70%;
         height: 0px;
         position: absolute;
-        left:15%;
+        left: 15%;
         //z-index: -1;
 
         &__label {
