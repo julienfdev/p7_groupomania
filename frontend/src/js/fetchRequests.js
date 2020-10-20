@@ -81,10 +81,11 @@ export const deletePost = async (slug, user) => {
 export const getCategories = async () => {
     try {
         const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/category`;
-
+        const authorizationHeader = store.getters.authorizationHeader;
         const fetchResponse = await fetch(apiCall, {
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': authorizationHeader
             }
         })
         return fetchResponse.json();

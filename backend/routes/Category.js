@@ -5,6 +5,6 @@ const categoriesCtrl = require('../controllers/Category');
 const auth = require('../middlewares/auth');
 
 
-router.get('/', categoriesCtrl.getCategories);
+router.get('/',auth, categoriesCtrl.getCategories);
 
 module.exports = router;

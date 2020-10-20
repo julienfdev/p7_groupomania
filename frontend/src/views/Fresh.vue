@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div class="container-fluid">
-      <div class="row border text-center py-4">
-        <div class="col">Placeholder Categories</div>
-      </div>
-    </div>
+        <CategoriesBar />
     <div class="container">
       <div class="row mt-2 mt-lg-3 d-flex justify-content-center">
         <FreshPosts class="col-lg-9" />
@@ -15,6 +11,7 @@
 
 <script>
   import FreshPosts from '@/components/FreshPosts';
+  import CategoriesBar from '@/components/CategoriesBar'
   // @ is an alias to /src
 
   export default {
@@ -23,7 +20,8 @@
       return {};
     },
     components: {
-      FreshPosts
+      FreshPosts,
+      CategoriesBar
     },
   }
 </script>

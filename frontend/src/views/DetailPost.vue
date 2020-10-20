@@ -2,7 +2,7 @@
     <div>
         <div class="container">
             <div class="row mt-2 mt-lg-3 d-flex justify-content-center">
-                <div class="col-lg-8">
+                <div class="col-lg-9">
                     <Post :post="postObject.post" @postDeleted="deletion()"/>
                     <Comments :commentArray="postObject.commentList" />
                 </div>
