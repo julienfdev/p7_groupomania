@@ -18,7 +18,8 @@
             </div>
             <div class="d-flex">
                 <ToggleButton v-if="currentUser.isAdmin" v-model="hotStatus" class="mx-2 mb-0" name="Hot"
-                    :labels="{checked: 'Hot !', unchecked: 'Fresh'}" :width="70" :height="24" :color="{checked: '#217185', unchecked: '#343a40'}" :font-size="12" @change="toggleEvent" />
+                    :value="hotStatus" :labels="{checked: 'Hot !', unchecked: 'Fresh'}" :width="70" :height="24"
+                    :color="{checked: '#217185', unchecked: '#343a40'}" :font-size="12" @change="toggleEvent"/>
                 <button class="icon icon__trash mx-2" v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)"
                     @click="deletion(post)" />
                 <button class="icon icon__edit mx-2"
@@ -113,7 +114,7 @@
                 }
             }
         },
-        beforeMount() {}
+        beforeMount() {},
     }
 </script>
 
@@ -209,6 +210,7 @@
             color: #aaa;
         }
     }
+
     button {
         border: none;
     }

@@ -19,6 +19,24 @@ export const getPosts = async (category, page) => {
     }
 };
 
+export const getCategoriesPosts = async (category, page) =>{
+    try {
+        const authorizationHeader = store.getters.authorizationHeader;
+        const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/post/category/${category}/${(page)? page : ''}`;
+
+        const fetchResponse = await fetch(apiCall, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authorizationHeader
+            }
+        })
+        return fetchResponse.json();
+    } catch (error) {
+        // Faire de la gestion d'erreurs
+        console.error(error);
+    }
+}
+
 export const getPost = async (slug) => {
     try {
         const authorizationHeader = store.getters.authorizationHeader;
