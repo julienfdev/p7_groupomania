@@ -4,6 +4,7 @@ const {
 const errorHandlers = require('../modules/errorHandlers')
 const Comment = require('../models/Comment');
 const permissions = require('../modules/userPermissions');
+const slugGenerator = require('../modules/slugGenerator');
 
 exports.adminGetLastComments = async (req, res, next) => {
     try {
@@ -42,17 +43,19 @@ exports.updateComment = async (req, res, next) => {
                 message: 'Comment not found'
             };
         }
+        const posterId = (await comment.getUser({attributes: ['id']})).id;
         // lazy loading
-        if (!((await comment.getUser({attributes: ['id']})).id === req.loggedUser.id) || !req.loggedUser.isAdmin) {
+        if (!((posterId === req.loggedUser.id ) || (req.loggedUser.isAdmin))) {
             throw {
                 status: 403,
                 message: 'Unauthorized update'
             }
         }
         await comment.update({
-            text: req.validated.text
+            text: req.validated.text,
+            slug: slugGenerator(req.validated.text)
         })
-        res.status(200).json({message: 'Comment updated successfully'});
+        res.status(200).json({message: 'Comment updated successfully', commentSlug: comment.slug}, );
     } catch (error) {
         console.log(error);
         errorHandlers.basicHandler(res, error);

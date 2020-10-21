@@ -168,3 +168,44 @@ export const updatePost = async (postObject, image, user) => {
        console.error(error);
    }
 }
+
+export const deleteComment = async (comment, user) => {
+    const authorizationHeader = store.getters.authorizationHeader;
+    const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/comments/${comment.slug}`;
+    const fetchResponse = await fetch(apiCall, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': authorizationHeader,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userSlug: user.slug,
+        })
+    });
+    if (fetchResponse.status === 200) {
+        return true;
+    } else {
+        return false;
+    }
+}
+export const updateComment = async (comment, user) => {
+    const authorizationHeader = store.getters.authorizationHeader;
+    const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/comments/${comment.slug}`;
+    const fetchResponse = await fetch(apiCall, {
+        method: 'PUT',
+        headers: {
+            'Authorization': authorizationHeader,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userSlug: user.slug,
+            text: comment.text
+        })
+    });
+    if (fetchResponse.status === 200) {
+        const response = await fetchResponse.json();
+        return response.commentSlug;
+    } else {
+        return false;
+    }
+}

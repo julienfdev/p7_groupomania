@@ -25,7 +25,7 @@ export default new Vuex.Store({
       {
         name: 'Profile',
         text: 'Profil',
-        root: '/placeholder',   // To be updated when user logged in
+        root: '/placeholder', // To be updated when user logged in
         active: false,
         showLog: true,
         hideNonAdmin: false
@@ -62,7 +62,13 @@ export default new Vuex.Store({
       logValid: false
     },
     categories: {},
-    displayedPosts:{}
+    displayedPosts: {},
+    currentPost: {
+      post: {
+        title: "",
+      },
+      commentList: []
+    }
   },
   mutations: {
     SET_ACTIVE(state, index) {
@@ -79,19 +85,22 @@ export default new Vuex.Store({
       const profileItem = state.menuItems.find((item) => {
         return item.name === 'Profile';
       })
-     profileItem.root = `/user/${slug}`;
+      profileItem.root = `/user/${slug}`;
     },
-    USER_SET_TOKEN(state, token){
+    USER_SET_TOKEN(state, token) {
       state.currentUser.token = token;
     },
-    USER_SET_ADMIN(state, admin){
+    USER_SET_ADMIN(state, admin) {
       state.currentUser.isAdmin = admin;
     },
-    USER_SET_VALID(state, valid){
+    USER_SET_VALID(state, valid) {
       state.currentUser.logValid = valid;
     },
     CATEGORIES_POPULATE(state, payload) {
       state.categories = payload;
+    },
+    SET_POST(state, payload){
+      state.currentPost = payload;
     }
   },
   actions: {
@@ -122,6 +131,9 @@ export default new Vuex.Store({
         context.commit('USER_SET_VALID', false);
       }
     },
+    setPost(context, payload){
+      context.commit('SET_POST', payload);
+    }
   },
   getters: {
     authorizationHeader(state) {

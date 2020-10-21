@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex mb-2 justify-content-between">
-        <input type="text" class="col-9 border bg-dark text-light border-dark shadow-sm" v-model="currentTitle">
+        <input type="text" class="col-12 border bg-dark text-light border-dark shadow-sm" v-model="currentText">
         <div class="col-3 justify-content-end d-flex">
             <button @click="cancelEdit" class="btn btn-secondary col-4 d-flex shadow-sm justify-content-center">
                 <div class="icon icon__cancel" /></button>
@@ -12,41 +12,44 @@
 
 <script>
     import {
-        updatePost
+        updateComment, getPost
     } from "@/js/fetchRequests";
+    import {mapActions, mapState} from 'vuex';
 
     export default {
-        name: "EditBlock",
+        name: "EditComment",
         data() {
             return {
-                currentTitle: ""
+                currentText: ""
             }
         },
         props: {
-            post: {
+            comment: {
                 required: true,
                 type: Object
             }
         },
         beforeMount() {
-            this.currentTitle = this.post.title
+            this.currentText = this.comment.text
+        },
+        computed:{
+            ...mapState(['currentPost'])
         },
         methods: {
             cancelEdit() {
-                this.currentTitle = this.post.title;
+                this.currentText = this.comment.text;
                 this.$emit("deactivateEdit");
             },
             async validateEdit() {
                 try {
-                    if (this.currentTitle !== this.post.title) {
+                    if (this.currentText !== this.comment.text) {
                         const updateObject = {
-                            title: this.currentTitle,
-                            slug: this.post.slug
+                            text: this.currentText,
+                            slug: this.comment.slug
                         };
-                        const validatedEdit = await updatePost(updateObject, null, this.$store.state.currentUser);
+                        const validatedEdit = await updateComment(updateObject, this.$store.state.currentUser);
                         if (validatedEdit) {
-                            this.post.title = this.currentTitle;
-                            this.post.slug = validatedEdit
+                            this.setPost((await getPost(this.$route.params.slug)));
                             this.$emit("deactivateEdit");
                         } else {
                             this.cancelEdit();
@@ -57,17 +60,17 @@
                 } catch (error) {
                     this.cancelEdit();
                 }
-            }
+            },
+            ...mapActions(['setPost'])
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    input[type="text"] {
+input[type="text"] {
         background-color: #aaa;
         height: 1.4em;
-        font-size: 1.8em;
-        font-style: italic;
+        font-size: 1em;
         padding-top : 0.2em;
         border-radius: 1em;
     }
@@ -81,8 +84,8 @@
         background-color: #fff;
         mask: center no-repeat;
         mask-size: 100%;
-        height: 2em;
-        width: 2em;
+        height: 1em;
+        width: 1em;
         transition: background-color 200ms ease-in-out;
 
         &__cancel {
