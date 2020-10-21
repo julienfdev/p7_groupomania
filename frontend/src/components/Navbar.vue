@@ -39,7 +39,7 @@
         mapState
     } from 'vuex';
     import MenuList from './navbar/MenuList';
-    //import {closeMenu} from '../router/index';
+    import {getCategories} from '../js/fetchRequests';
 
     export default {
         name: 'Navbar',
@@ -60,7 +60,8 @@
                 localStorage.removeItem('currentUser');
                 this.$router.push('/login');
             },
-            addPost() {
+            async addPost() {
+                this.$store.commit('CATEGORIES_POPULATE', await getCategories());
                 window.$('#addPostModal').modal({
                     backdrop: 'static',
                     show: true

@@ -95,14 +95,12 @@
                 }
             },
             closeModal() {
-                // Ajouter des v-if et des infobulles
                 this.titleValid = true;
                 this.imageValid = true;
                 document.querySelector('#addPostForm').reset();
                 document.querySelector('#fileSelector').value = null;
                 const img = document.querySelector('#filePreviewer');
                 img.setAttribute('src', require('@/assets/image-placeholder.jpg'));
-
                 window.$('#addPostModal').modal('hide');
             },
             async postImage(event) {
@@ -128,8 +126,8 @@
                     this.imageValid = postValid.image;
                     this.titleValid = postValid.title;
                 }
-            }
-        }
+            },
+        },
     }
 </script>
 
