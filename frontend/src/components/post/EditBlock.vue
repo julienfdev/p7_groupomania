@@ -1,10 +1,10 @@
 <template>
     <div class="d-flex mb-2 justify-content-between">
-        <input type="text" class="col-9 border bg-dark text-light border-dark" v-model="currentTitle">
+        <input type="text" class="col-9 border bg-dark text-light border-dark shadow-sm" v-model="currentTitle">
         <div class="col-3 justify-content-end d-flex">
-            <button @click="cancelEdit" class="btn btn-secondary col-4 d-flex justify-content-center">
+            <button @click="cancelEdit" class="btn btn-secondary col-4 d-flex shadow-sm justify-content-center">
                 <div class="icon icon__cancel" /></button>
-            <button @click="validateEdit" class="btn btn-primary col-4 ml-2  d-flex justify-content-center">
+            <button @click="validateEdit" class="btn btn-primary col-4 ml-2  d-flex  shadow-sm justify-content-center">
                 <div class="icon icon__check" /></button>
         </div>
     </div>
