@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex mb-2 justify-content-between">
-        <input type="text" class="col-9 border bg-dark text-light border-dark rounded" v-model="currentTitle">
+        <input type="text" class="col-9 border bg-dark text-light border-dark" v-model="currentTitle">
         <div class="col-3 justify-content-end d-flex">
             <button @click="cancelEdit" class="btn btn-secondary col-4 d-flex justify-content-center">
                 <div class="icon icon__cancel" /></button>
@@ -46,8 +46,6 @@
                         const validatedEdit = await updatePost(updateObject, null, this.$store.state.currentUser);
                         if (validatedEdit) {
                             this.post.slug = validatedEdit
-                            this.post.title = this.currentTitle;
-                            this.
                             this.$emit("deactivateEdit");
                         } else {
                             this.cancelEdit();
@@ -69,7 +67,8 @@
         height: 1.4em;
         font-size: 1.8em;
         font-style: italic;
-
+        padding-top : 0.2em;
+        border-radius: 1em;
     }
 
     button {
