@@ -141,6 +141,7 @@ export const postPost = async (postObject, image, user) => {
 }
 
 export const updatePost = async (postObject, image, user) => {
+   try {
     const authorizationHeader = store.getters.authorizationHeader;
     const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/post/${postObject.slug}`;
     delete postObject.slug;
@@ -157,9 +158,13 @@ export const updatePost = async (postObject, image, user) => {
             })
         });
         if (fetchResponse.status === 200) {
-            return true;
+            const response = await fetchResponse.json();
+            return response.postSlug;
         } else {
             return false;
         }
     }
+   } catch (error) {
+       console.error(error);
+   }
 }

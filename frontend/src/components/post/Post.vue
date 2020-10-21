@@ -1,9 +1,11 @@
 <template>
     <div class="col my-2">
-        <h3>
+        <h3 v-if="!editToggle">
             <router-link class="postlink" :to="`/post/${post.slug}`">
-                {{(post.title.length > 60) ? post.title.slice(0, 60) + '...' : post.title }}</router-link>
+                {{(post.title.length > 60) ? post.title.slice(0, 60) + '...' : post.title }}
+            </router-link>
         </h3>
+        <EditBlock v-if="editToggle" :post="post" @deactivateEdit="editToggle = false" />
         <div class="d-flex justify-content-center">
             <img :src="post.image_url" :alt="post.title" class="img-fluid rounded shadow" />
         </div>
@@ -19,10 +21,10 @@
             <div class="d-flex">
                 <ToggleButton v-if="currentUser.isAdmin" v-model="hotStatus" class="mx-2 mb-0" name="Hot"
                     :value="hotStatus" :labels="{checked: 'Hot !', unchecked: 'Fresh'}" :width="70" :height="24"
-                    :color="{checked: '#217185', unchecked: '#343a40'}" :font-size="12" @change="toggleEvent"/>
+                    :color="{checked: '#217185', unchecked: '#343a40'}" :font-size="12" @change="toggleEvent" />
                 <button class="icon icon__trash mx-2" v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)"
                     @click="deletion(post)" />
-                <button class="icon icon__edit mx-2"
+                <button @click="editToggling" class="icon icon__edit mx-2" :class="{icon__edit__disabled: editToggle}"
                     v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" />
                 <router-link :to="`/post/${post.slug}`">
                     <div class="icon icon__comment mx-2" />
@@ -48,16 +50,18 @@
     import {
         ToggleButton
     } from 'vue-js-toggle-button'
-
+    import EditBlock from './EditBlock'
 
     export default {
         name: 'Post',
         components: {
-            ToggleButton
+            ToggleButton,
+            EditBlock
         },
         data() {
             return {
-                hotStatus: this.post.is_hot
+                hotStatus: this.post.is_hot,
+                editToggle: false
             }
         },
         computed: {
@@ -111,6 +115,11 @@
                 }
                 if (await !updatePost(postObject, null, this.currentUser)) {
                     this.hotStatus = !this.hotStatus;
+                }
+            },
+            editToggling(){
+                if(!this.editToggle){
+                    this.editToggle = true;
                 }
             }
         },
@@ -189,6 +198,15 @@
 
             &:hover {
                 background-color: #bbf;
+            }
+
+            &__disabled {
+                background-color: #aaa;
+
+                &:hover {
+                    background-color: #aaa !important;
+                    cursor: default;
+                }
             }
         }
 
