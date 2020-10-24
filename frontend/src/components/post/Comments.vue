@@ -1,14 +1,17 @@
 <template>
-    <div>
-        <h4>Commentaires</h4>
+    <div class="container">
+        <h4 class="row">Commentaires</h4>
         <div v-for="comment of currentPost.commentList" :key="comment.slug" class="comments">
             <Comment :comment="comment" @commentDeleted="onDelete()" />
         </div>
+        <hr/>
+        <PostComment />
     </div>
 </template>
 
 <script>
     import Comment from './Comment';
+    import PostComment from './PostComment';
     import {getPost} from '@/js/fetchRequests';
     import {mapState, mapActions} from 'vuex';
 
@@ -23,7 +26,8 @@
             ...mapState(['currentPost'])
         },
         components: {
-            Comment
+            Comment,
+            PostComment
         },
         methods: {
             async onDelete() {
@@ -35,5 +39,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+    hr{
+        width: 70%;
+    }
 </style>

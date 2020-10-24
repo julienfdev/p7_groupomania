@@ -209,3 +209,24 @@ export const updateComment = async (comment, user) => {
         return false;
     }
 }
+
+export const postComment = async (comment, post, user) =>{
+    const authorizationHeader = store.getters.authorizationHeader;
+    const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/post/${post.post.slug}/comment`;
+    const fetchResponse = await fetch(apiCall, {
+        method: 'POST',
+        headers: {
+            'Authorization': authorizationHeader,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userSlug: user.slug,
+            text: comment
+        })
+    });
+    if (fetchResponse.status === 201) {
+        return true;
+    } else {
+        return false;
+    }
+};

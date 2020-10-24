@@ -40,7 +40,8 @@ const routes = [{
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
+  mode: 'history'
 })
 
 router.beforeEach(async (to, from, next) => {

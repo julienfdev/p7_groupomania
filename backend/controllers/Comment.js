@@ -75,7 +75,8 @@ exports.deleteComment = async (req, res, next) => {
                 message: 'Comment not found'
             };
         }
-        if (!((await comment.getUser({attributes: ['id']})).id === req.loggedUser.id) || !req.loggedUser.isAdmin) {
+        const commentPosterId = (await comment.getUser({attributes: ['id']})).id;
+        if (!(commentPosterId === req.loggedUser.id) && !req.loggedUser.isAdmin) {
             throw {
                 status: 403,
                 message: 'Unauthorized deletion'

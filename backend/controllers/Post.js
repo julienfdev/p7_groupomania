@@ -93,7 +93,11 @@ exports.getPost = async (req, res, next) => {
             };
         }
         const postObject = await formatPost(post, req.loggedUser);
-        const rawComments = await post.getComments();
+        const rawComments = await post.getComments({
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        });
         const commentList = await formatComments(rawComments);
 
 
