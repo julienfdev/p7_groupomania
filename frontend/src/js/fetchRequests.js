@@ -12,6 +12,10 @@ export const getPosts = async (category, page) => {
                 'Authorization': authorizationHeader
             }
         })
+        if(fetchResponse.status === 404){
+            return false;
+        }
+
         return fetchResponse.json();
     } catch (error) {
         // Faire de la gestion d'erreurs
@@ -19,7 +23,7 @@ export const getPosts = async (category, page) => {
     }
 };
 
-export const getCategoriesPosts = async (category, page) =>{
+export const getCategoriesPosts = async (category, page) => {
     try {
         const authorizationHeader = store.getters.authorizationHeader;
         const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/post/category/${category}/${(page)? page : ''}`;
@@ -30,6 +34,10 @@ export const getCategoriesPosts = async (category, page) =>{
                 'Authorization': authorizationHeader
             }
         })
+        if(fetchResponse.status === 404){
+            return false;
+        }
+
         return fetchResponse.json();
     } catch (error) {
         // Faire de la gestion d'erreurs
@@ -141,32 +149,32 @@ export const postPost = async (postObject, image, user) => {
 }
 
 export const updatePost = async (postObject, image, user) => {
-   try {
-    const authorizationHeader = store.getters.authorizationHeader;
-    const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/post/${postObject.slug}`;
-    delete postObject.slug;
-    if (!image) {
-        const fetchResponse = await fetch(apiCall, {
-            method: 'PUT',
-            headers: {
-                'Authorization': authorizationHeader,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                ...postObject,
-                userSlug: user.slug
-            })
-        });
-        if (fetchResponse.status === 200) {
-            const response = await fetchResponse.json();
-            return response.postSlug;
-        } else {
-            return false;
+    try {
+        const authorizationHeader = store.getters.authorizationHeader;
+        const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/post/${postObject.slug}`;
+        delete postObject.slug;
+        if (!image) {
+            const fetchResponse = await fetch(apiCall, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': authorizationHeader,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ...postObject,
+                    userSlug: user.slug
+                })
+            });
+            if (fetchResponse.status === 200) {
+                const response = await fetchResponse.json();
+                return response.postSlug;
+            } else {
+                return false;
+            }
         }
+    } catch (error) {
+        console.error(error);
     }
-   } catch (error) {
-       console.error(error);
-   }
 }
 
 export const deleteComment = async (comment, user) => {
@@ -210,7 +218,7 @@ export const updateComment = async (comment, user) => {
     }
 }
 
-export const postComment = async (comment, post, user) =>{
+export const postComment = async (comment, post, user) => {
     const authorizationHeader = store.getters.authorizationHeader;
     const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/post/${post.post.slug}/comment`;
     const fetchResponse = await fetch(apiCall, {
@@ -230,3 +238,46 @@ export const postComment = async (comment, post, user) =>{
         return false;
     }
 };
+
+export const getUser = async (user) => {
+    const authorizationHeader = store.getters.authorizationHeader;
+    const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/user/${user}`;
+    const fetchResponse = await fetch(apiCall, {
+        method: 'GET',
+        headers: {
+            'Authorization': authorizationHeader,
+            'Content-Type': 'application/json'
+        },
+    });
+    if (fetchResponse.status === 200) {
+        return (await fetchResponse.json());
+    } else {
+        return false;
+    }
+};
+
+export const deleteUser = async (userToDelete, user, password = undefined) =>{
+    const authorizationHeader = store.getters.authorizationHeader;
+    const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/user/${userToDelete}`;
+
+    const body = {
+        userSlug: user.slug,
+    }
+    if(password){
+        body.password = password
+    }
+
+    const fetchResponse = await fetch(apiCall, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': authorizationHeader,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    });
+    if (fetchResponse.status === 200) {
+        return true;
+    } else {
+        return false;
+    }
+}

@@ -43,9 +43,10 @@ exports.updateComment = async (req, res, next) => {
                 message: 'Comment not found'
             };
         }
-        const posterId = (await comment.getUser({attributes: ['id']})).id;
-        // lazy loading
-        if (!((posterId === req.loggedUser.id ) || (req.loggedUser.isAdmin))) {
+        const commentPoster = (await comment.getUser({
+            attributes: ['id']
+        }));
+        if ((commentPoster.id && (commentPoster.id !== req.loggedUser.id)) && !req.loggedUser.isAdmin) {
             throw {
                 status: 403,
                 message: 'Unauthorized update'
@@ -55,7 +56,10 @@ exports.updateComment = async (req, res, next) => {
             text: req.validated.text,
             slug: slugGenerator(req.validated.text)
         })
-        res.status(200).json({message: 'Comment updated successfully', commentSlug: comment.slug}, );
+        res.status(200).json({
+            message: 'Comment updated successfully',
+            commentSlug: comment.slug
+        }, );
     } catch (error) {
         console.log(error);
         errorHandlers.basicHandler(res, error);
@@ -75,15 +79,19 @@ exports.deleteComment = async (req, res, next) => {
                 message: 'Comment not found'
             };
         }
-        const commentPosterId = (await comment.getUser({attributes: ['id']})).id;
-        if (!(commentPosterId === req.loggedUser.id) && !req.loggedUser.isAdmin) {
+        const commentPoster = (await comment.getUser({
+            attributes: ['id']
+        }));
+        if ((commentPoster && (commentPoster.id !== req.loggedUser.id)) && !req.loggedUser.isAdmin) {
             throw {
                 status: 403,
                 message: 'Unauthorized deletion'
             }
         }
         await comment.destroy();
-        res.status(200).json({message: 'Comment deleted successfully'});
+        res.status(200).json({
+            message: 'Comment deleted successfully'
+        });
     } catch (error) {
         console.log(error);
         errorHandlers.basicHandler(res, error);

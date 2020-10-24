@@ -37,6 +37,17 @@ const routes = [{
     name: 'Category',
     component: () => import( /* webpackChunkName:  "catgegory" */ '../views/CategoryPage.vue')
   },
+  {
+    path: '/user/:slug',
+    name: 'Profile',
+    component: () => import( /* webpackChunkName:  "profile" */ '../views/Profile.vue')
+  },
+  {
+    path: '*',
+    name: '404',
+    component: () => import( /* webpackChunkName:  "profile" */ '../views/404.vue')
+  },
+  
 ]
 
 const router = new VueRouter({

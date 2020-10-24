@@ -1,13 +1,13 @@
 <template>
-    <div class="row my-2 comments__content border border-dark">
-        <div class="col-lg-10 d-flex py-2 px-3">
+    <div class="row my-2 comments__content border border-dark d-flex px-2 py-2">
+        <div class="col">
             <div class="mr-3 comments__content__username">
                 <span class="font-weight-bold">{{comment.userName}} :</span>
             </div>
-            <div v-if='!editToggle' class="comments__content__text text-justify"> {{comment.text}}</div>
-            <EditComment :comment='comment' v-if="editToggle" @deactivateEdit="editToggle = false" />
+            <div v-if='!editToggle' class="text-justify"> {{comment.text}}</div>
+            <EditComment class="" :comment='comment' v-if="editToggle" @deactivateEdit="editToggle = false" />
         </div>
-        <div class="col-lg-2 text-center my-2">
+        <div class="col-lg-2 text-center py-2">
             <button class="icon icon__trash mx-2" v-if="currentUser.isAdmin || (comment.userSlug === currentUser.slug)"
                 @click="deletion(comment)" />
             <button class="icon icon__edit mx-2" :class="{icon__edit__disabled: editToggle}"
@@ -66,12 +66,11 @@
             background-color: darken(#4b545c, 5);
 
             &__username {
-                min-width: 30%;
-                flex-shrink: 0;
+
             }
 
             &__text {
-                max-width: 70%;
+                
             }
         }
     }

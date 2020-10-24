@@ -28,7 +28,13 @@
             }
         },
         async beforeMount() {
-            this.hotPosts = await getPosts('hot');
+            const hotPosts = await getPosts('hot');
+            if(hotPosts){
+            this.hotPosts = hotPosts;
+            }
+            else{
+                this.$router.push('/login');
+            }
         }
     }
 </script>

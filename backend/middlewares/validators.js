@@ -263,7 +263,7 @@ exports.userDelete = (req, res, next) => {
     try {
         let errorObject = {};
         req.validated = {};
-        if (!req.body.password){
+        if (req.body.password){
             if(!(typeof req.body.password === 'string')){
                 errorObject.password = 'type';
             }

@@ -1,7 +1,7 @@
 <template>
     <div class="row d-flex justify-content-between mb-5">
         <input type="text" placeholder="Ecrivez quelque chose..." class="flex-grow-1" v-model="commentText" />
-        <button @click="addComment" class="btn btn-primary d-flex shadow-sm col-1 ml-3 justify-content-center">
+        <button @click="addComment" class="btn btn-primary d-flex shadow-sm col-2 col-lg-1 ml-3 justify-content-center">
             <div class="icon icon__envelope" /></button>
     </div>
 </template>

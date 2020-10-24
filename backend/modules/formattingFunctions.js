@@ -35,8 +35,8 @@ const formatPost = async (rawPost, user) => {
         is_hot: rawPost.is_hot,
         createdAt: rawPost.createdAt,
         categorySlug: rawPost.Category.slug,
-        userSlug: originalPoster.slug,
-        userName: originalPoster.nickname,
+        userSlug: (originalPoster)? originalPoster.slug : 'nobody',
+        userName: (originalPoster)? originalPoster.nickname : 'Utilisateur supprimé',
         likedByCurrentUser: ((likedByUser.length) ? true : false),
         liked: liked
     }
@@ -53,12 +53,13 @@ const formatComments = async (rawComments) => {
     });
 }
 const formatComment = async (rawComment) => {
+    const commenter = await rawComment.getUser();
     const commentEntry = {
         slug: rawComment.slug,
         text: rawComment.text,
         postSlug: (await rawComment.getPost()).slug,
-        userSlug: (await rawComment.getUser()).slug,
-        userName: (await rawComment.getUser()).nickname
+        userSlug: (commenter) ? commenter.slug : 'nobody',
+        userName: (commenter) ? commenter.nickname : 'Utilisateur supprimé',
     }
     return new Promise((resolve, reject) => {
         resolve(commentEntry)

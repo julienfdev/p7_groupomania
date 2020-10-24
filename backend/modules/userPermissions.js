@@ -7,6 +7,7 @@
 // Returns true if condition is met
 
 exports.isSelfOrAdmin = (loggedUser, slug) => {
+    console.log(`${loggedUser.slug} vs ${slug}`)
     return (loggedUser.slug === slug || loggedUser.isAdmin);
 }
 

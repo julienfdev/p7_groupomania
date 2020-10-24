@@ -68,6 +68,13 @@ export default new Vuex.Store({
         title: "",
       },
       commentList: []
+    },
+    userProfile: {
+      slug: "",
+      email: "",
+      nickname: "",
+      createdAt: "",
+      showExtended: false
     }
   },
   mutations: {
@@ -99,8 +106,11 @@ export default new Vuex.Store({
     CATEGORIES_POPULATE(state, payload) {
       state.categories = payload;
     },
-    SET_POST(state, payload){
+    SET_POST(state, payload) {
       state.currentPost = payload;
+    },
+    SET_PROFILE(state, payload){
+      state.userProfile = payload;
     }
   },
   actions: {
@@ -131,8 +141,11 @@ export default new Vuex.Store({
         context.commit('USER_SET_VALID', false);
       }
     },
-    setPost(context, payload){
+    setPost(context, payload) {
       context.commit('SET_POST', payload);
+    },
+    setProfile(context, payload) {
+      context.commit('SET_PROFILE', payload);
     }
   },
   getters: {
