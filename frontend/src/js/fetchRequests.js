@@ -299,3 +299,21 @@ export const getUserPosts = async (userSlug) => {
         return false;
     }
 }
+
+export const getLastComments = async () =>{
+    const authorizationHeader = store.getters.authorizationHeader;
+    const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/comments`;
+
+    const fetchResponse = await fetch(apiCall, {
+        method: 'GET',
+        headers: {
+            'Authorization': authorizationHeader,
+            'Content-Type': 'application/json'
+        }
+    });
+    if (fetchResponse.status === 200) {
+        return fetchResponse.json();
+    } else {
+        return false;
+    }
+}

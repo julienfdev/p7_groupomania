@@ -76,8 +76,8 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 
-router.afterEach((to) => {
-  store.dispatch('updateActive', to); // updateActive is a lame function to highlight the current menu item, pretty sure there's another solution.
+router.afterEach(() => {
+
 })
 
 export default router

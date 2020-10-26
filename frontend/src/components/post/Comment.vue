@@ -67,15 +67,15 @@
             border-radius: 1em;
             background-color: darken(#4b545c, 5);
         }
+    }
 
-        a {
-            color: #fff;
-            transition: color 150ms ease-in-out;
+    a {
+        color: #fff;
+        transition: color 150ms ease-in-out;
 
-            &:hover {
-                text-decoration: none;
-                color: #aaa;
-            }
+        &:hover {
+            text-decoration: none;
+            color: #aaa;
         }
     }
 
