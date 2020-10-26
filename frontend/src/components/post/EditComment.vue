@@ -1,10 +1,12 @@
 <template>
     <div class="d-flex mb-2 justify-content-between">
-        <input type="text" class="border bg-dark text-light border-dark mr-2 mr-lg-3 shadow-sm flex-grow-1" v-model="currentText">
+        <input type="text" class="border bg-dark text-light border-dark mr-2 mr-lg-3 shadow-sm flex-grow-1"
+            v-model="currentText">
         <div class=" justify-content-end d-flex">
             <button @click="cancelEdit" class="btn btn-secondary col-6 d-flex shadow-sm justify-content-center">
                 <div class="icon icon__cancel" /></button>
-            <button @click="validateEdit" class="btn btn-primary col-6 ml-1 ml-lg-2 d-flex  shadow-sm justify-content-center">
+            <button @click="validateEdit"
+                class="btn btn-primary col-6 ml-1 ml-lg-2 d-flex  shadow-sm justify-content-center">
                 <div class="icon icon__check" /></button>
         </div>
     </div>
@@ -12,9 +14,13 @@
 
 <script>
     import {
-        updateComment, getPost
+        updateComment,
+        getPost
     } from "@/js/fetchRequests";
-    import {mapActions, mapState} from 'vuex';
+    import {
+        mapActions,
+        mapState
+    } from 'vuex';
 
     export default {
         name: "EditComment",
@@ -32,7 +38,7 @@
         beforeMount() {
             this.currentText = this.comment.text
         },
-        computed:{
+        computed: {
             ...mapState(['currentPost'])
         },
         methods: {
@@ -49,8 +55,10 @@
                         };
                         const validatedEdit = await updateComment(updateObject, this.$store.state.currentUser);
                         if (validatedEdit) {
-                            this.setPost((await getPost(this.$route.params.slug)));
-                            this.$emit("deactivateEdit");
+                            if (this.$route.params.slug) {
+                                this.setPost((await getPost(this.$route.params.slug)));
+                            }
+                            this.$emit("deactivateEdit", this.currentText);
                         } else {
                             this.cancelEdit();
                         }
@@ -67,11 +75,11 @@
 </script>
 
 <style lang="scss" scoped>
-input[type="text"] {
+    input[type="text"] {
         background-color: #aaa;
         height: 1.4em;
         font-size: 1em;
-        padding-top : 0.2em;
+        padding-top: 0.2em;
         border-radius: 1em;
     }
 

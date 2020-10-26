@@ -317,3 +317,21 @@ export const getLastComments = async () =>{
         return false;
     }
 }
+
+export const getLastUsers = async () =>{
+    const authorizationHeader = store.getters.authorizationHeader;
+    const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/user`;
+
+    const fetchResponse = await fetch(apiCall, {
+        method: 'GET',
+        headers: {
+            'Authorization': authorizationHeader,
+            'Content-Type': 'application/json'
+        }
+    });
+    if (fetchResponse.status === 200) {
+        return fetchResponse.json();
+    } else {
+        return false;
+    }
+}

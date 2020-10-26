@@ -16,9 +16,9 @@ exports.adminGetLastComments = async (req, res, next) => {
         }
         // Get last 50 Comments
         const rawComments = await Comment.findAll({
-            limit: 50,
+            limit: 15,
             order: [
-                ['createdAt', 'DESC']
+                ['createdAt', 'ASC']
             ]
         });
         // Async function because it fetches Post information

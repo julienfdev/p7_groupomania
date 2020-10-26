@@ -78,7 +78,7 @@ exports.login = async (req, res, next) => {
                 token: token,
                 slug: userFound.slug,
                 isAdmin: userFound.isAdmin,
-                expires: (Math.floor(Date.now() /1000) + config.jwtConfig.expiration)
+                expires: (Math.floor(Date.now() / 1000) + config.jwtConfig.expiration)
             })
         }
     } catch (error) {
@@ -313,16 +313,40 @@ exports.getUserComments = async (req, res, next) => {
             };
         }
         const rawComments = await user.getComments({
-                limit: 50,
-                order: [
-                    ['createdAt', 'DESC']
-                ]
-            });
-             // Limit
-    let comments = await formatComments(rawComments);
-    res.status(200).json(comments);
-} catch (error) {
-    console.log(error);
-    errorHandlers.basicHandler(res, error);
+            limit: 50,
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        });
+        // Limit
+        let comments = await formatComments(rawComments);
+        res.status(200).json(comments);
+    } catch (error) {
+        console.log(error);
+        errorHandlers.basicHandler(res, error);
+    }
 }
-}
+
+exports.adminGetLastUsers = async (req, res, next) => {
+    try {
+        if (!req.loggedUser.isAdmin) {
+            throw {
+                status: 403,
+                message: 'You are not an admin'
+            };
+        }
+        // Get last 50 Comments
+        const lastUsers = await User.findAll({
+            limit: 15,
+            order: [
+                ['createdAt', 'DESC']
+            ],
+            attributes: ['nickname', 'slug', 'email']
+        });
+        // Async function because it fetches Post information
+        res.status(200).json(lastUsers);
+    } catch (error) {
+        console.log(error);
+        errorHandlers.basicHandler(res, error);
+    }
+};

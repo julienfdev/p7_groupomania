@@ -7,7 +7,7 @@
                 </span>
             </div>
             <div v-if='!editToggle' class="text-justify"> {{comment.text}}</div>
-            <EditComment class="" :comment='comment' v-if="editToggle" @deactivateEdit="editToggle = false" />
+            <EditComment class="" :comment='comment' v-if="editToggle" @deactivateEdit="handleEdit" />
         </div>
         <div class="col-lg-2 text-center py-2">
             <button class="icon icon__trash mx-2" v-if="currentUser.isAdmin || (comment.userSlug === currentUser.slug)"
@@ -57,6 +57,12 @@
                     this.$emit('commentDeleted');
                 }
             },
+            handleEdit(payload){
+                if (payload){
+                    this.comment.text = payload;
+                }
+                this.editToggle = false
+            }
         }
     }
 </script>

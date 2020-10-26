@@ -4,11 +4,12 @@
             <div class="col-6 border-right">
                 <h3 class="text-center">Derniers commentaires</h3>
                 <hr />
-                <Comment v-for="comment of lastComments" :key="comment.slug" :comment="comment" class="mx-2 text-white" />
+                <Comment @commentDeleted="refreshData" v-for="comment of lastComments" :key="comment.slug" :comment="comment" class="mx-2 text-white" />
             </div>
             <div class="col-6">
                 <h3 class="text-center">Derniers inscrits</h3>
                 <hr />
+                 <UserCard @userDeleted="refreshData" v-for="user of lastUsers" :key="user.slug" :user="user" class="mx-2 text-white" />
             </div>
         </div>
     </div>
@@ -16,27 +17,37 @@
 
 <script>
     import {
-        getLastComments
+        getLastComments, 
+        getLastUsers
     } from '@/js/fetchRequests';
     import Comment from '@/components/post/Comment';
+    import UserCard from '@/components/post/UserCard';
 
     export default {
         name: "Admin",
         data() {
             return {
-                lastComments: []
+                lastComments: [],
+                lastUsers: []
             }
         },
         components: {
-            Comment
+            Comment,
+            UserCard
         },
         async beforeMount() {
             if (!(this.$store.state.currentUser.isAdmin)) {
                 this.$router.push('/');
             } else {
-                this.lastComments = await getLastComments();
+                this.refreshData();
             }
         },
+        methods:{
+            async refreshData(){
+                this.lastComments = await getLastComments();
+                this.lastUsers = await getLastUsers();
+            }
+        }
     }
 </script>
 
