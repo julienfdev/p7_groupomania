@@ -16,7 +16,7 @@
                 <p class="mb-0 mt-2 font-weight-bold">{{post.likes}}</p>
                 <button class="icon icon__down mx-2" @click="dislike(post)"
                     :class="{icon__down__disliked: (post.likedByCurrentUser && post.liked === false), icon__up__disabled: (post.likedByCurrentUser && post.liked === true)}" />
-                <p class="ml-4 mb-0 align-self-end">par <span class="font-weight-bold">{{post.userName}}</span></p>
+                <p class="ml-4 mb-0 align-self-end">par <router-link :to="`/user/${post.userSlug}`"><span class="font-weight-bold">{{post.userName}}</span></router-link></p>
             </div>
             <div class="d-flex">
                 <ToggleButton v-if="currentUser.isAdmin" v-model="hotStatus" class="mx-2 mb-0" name="Hot"

@@ -252,7 +252,8 @@ exports.getUserPosts = async (req, res, next) => {
                 required: true
             }
         });
-        const posts = formatPosts(rawPosts);
+        console.log(rawPosts);
+        const posts = await formatPosts(rawPosts, req.loggedUser);
         res.status(200).json(posts);
     } catch (error) {
         console.log(error.message);

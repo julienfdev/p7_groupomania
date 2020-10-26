@@ -2,7 +2,9 @@
     <div class="row my-2 comments__content border border-dark d-flex px-2 py-2">
         <div class="col">
             <div class="mr-3 comments__content__username">
-                <span class="font-weight-bold">{{comment.userName}} :</span>
+                <span class="font-weight-bold">
+                    <router-link :to="`/user/${comment.userSlug}`">{{comment.userName}} :</router-link>
+                </span>
             </div>
             <div v-if='!editToggle' class="text-justify"> {{comment.text}}</div>
             <EditComment class="" :comment='comment' v-if="editToggle" @deactivateEdit="editToggle = false" />
@@ -64,13 +66,15 @@
         &__content {
             border-radius: 1em;
             background-color: darken(#4b545c, 5);
+        }
 
-            &__username {
+        a {
+            color: #fff;
+            transition: color 150ms ease-in-out;
 
-            }
-
-            &__text {
-                
+            &:hover {
+                text-decoration: none;
+                color: #aaa;
             }
         }
     }

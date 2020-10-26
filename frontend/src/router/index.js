@@ -33,6 +33,11 @@ const routes = [{
     component: () => import( /* webpackChunkName:  "post" */ '../views/DetailPost.vue')
   },
   {
+    path: '/admin',
+    name: "Admin",
+    component: () => import( /* webpackChunkName:  "profile" */ '../views/Admin.vue')
+  },
+  {
     path: '/:slug',
     name: 'Category',
     component: () => import( /* webpackChunkName:  "catgegory" */ '../views/CategoryPage.vue')
@@ -47,7 +52,7 @@ const routes = [{
     name: '404',
     component: () => import( /* webpackChunkName:  "profile" */ '../views/404.vue')
   },
-  
+
 ]
 
 const router = new VueRouter({
@@ -59,16 +64,14 @@ router.beforeEach(async (to, from, next) => {
   // Checks if user is valid, else directs to login page (user can still go to signup)
   if (!(to.path === '/login' || to.path === '/signup')) {
     const userLocalStorage = userLocalStorageFetch();
-    await store.dispatch('setUser', userLocalStorage);  // the setUser contains the check to verify the user is valid.
-    if(store.state.currentUser.logValid){
+    await store.dispatch('setUser', userLocalStorage); // the setUser contains the check to verify the user is valid.
+    if (store.state.currentUser.logValid) {
       next();
-    }
-    else{
+    } else {
       router.push('/login');
       //next() // (debug)
     }
-  }
-  else{
+  } else {
     next();
   }
 });

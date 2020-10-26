@@ -12,7 +12,7 @@ export const getPosts = async (category, page) => {
                 'Authorization': authorizationHeader
             }
         })
-        if(fetchResponse.status === 404){
+        if (fetchResponse.status === 404) {
             return false;
         }
 
@@ -34,7 +34,7 @@ export const getCategoriesPosts = async (category, page) => {
                 'Authorization': authorizationHeader
             }
         })
-        if(fetchResponse.status === 404){
+        if (fetchResponse.status === 404) {
             return false;
         }
 
@@ -256,14 +256,14 @@ export const getUser = async (user) => {
     }
 };
 
-export const deleteUser = async (userToDelete, user, password = undefined) =>{
+export const deleteUser = async (userToDelete, user, password = undefined) => {
     const authorizationHeader = store.getters.authorizationHeader;
     const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/user/${userToDelete}`;
 
     const body = {
         userSlug: user.slug,
     }
-    if(password){
+    if (password) {
         body.password = password
     }
 
@@ -277,6 +277,24 @@ export const deleteUser = async (userToDelete, user, password = undefined) =>{
     });
     if (fetchResponse.status === 200) {
         return true;
+    } else {
+        return false;
+    }
+}
+
+export const getUserPosts = async (userSlug) => {
+    const authorizationHeader = store.getters.authorizationHeader;
+    const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}/user/${userSlug}/posts`;
+
+    const fetchResponse = await fetch(apiCall, {
+        method: 'GET',
+        headers: {
+            'Authorization': authorizationHeader,
+            'Content-Type': 'application/json'
+        }
+    });
+    if (fetchResponse.status === 200) {
+        return fetchResponse.json();
     } else {
         return false;
     }
