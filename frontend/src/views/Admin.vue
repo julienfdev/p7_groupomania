@@ -9,7 +9,7 @@
             <div class="col-6">
                 <h3 class="text-center">Derniers inscrits</h3>
                 <hr />
-                 <UserCard @userDeleted="refreshData" v-for="user of lastUsers" :key="user.slug" :user="user" class="mx-2 text-white" />
+                 <UserCard @userDeleted="refreshData" v-for="user of filteredUsers" :key="user.slug" :user="user" class="mx-2 text-white" />
             </div>
         </div>
     </div>
@@ -29,6 +29,13 @@
             return {
                 lastComments: [],
                 lastUsers: []
+            }
+        },
+        computed:{
+            filteredUsers(){
+                return this.lastUsers.filter((user) => {
+                    return !(user.slug.includes('admingroup'));
+                })
             }
         },
         components: {
