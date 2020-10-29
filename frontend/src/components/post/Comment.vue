@@ -62,7 +62,8 @@
             handleEdit(payload){
                 // If edit was successful, we print the new text
                 if (payload){
-                    this.comment.text = payload;
+                    this.comment.text = payload.text;
+                    this.comment.slug = payload.slug;
                 }
                 this.editToggle = false
             }

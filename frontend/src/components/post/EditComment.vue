@@ -59,7 +59,7 @@
                             if (this.$route.params.slug) {
                                 this.setPost((await getPost(this.$route.params.slug)));
                             }
-                            this.$emit("deactivateEdit", this.currentText);
+                            this.$emit("deactivateEdit", {text: this.currentText, slug: validatedEdit});
                         } else {
                             this.cancelEdit();
                         }
