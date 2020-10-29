@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row mt-2 mt-lg-3 d-flex justify-content-center">
                 <div class="col-lg-9">
-                    <Post :post="currentPost.post" @postDeleted="deletion()" />
+                    <Post :post="currentPost.post" :key='currentPost.slug' @postDeleted="deletion()" />
                     <Comments />
                 </div>
             </div>
@@ -12,7 +12,10 @@
 </template>
 
 <script>
-    import {mapActions, mapState} from 'vuex'
+    import {
+        mapActions,
+        mapState
+    } from 'vuex'
     import Post from '@/components/post/Post';
     import Comments from '@/components/post/Comments';
     import {
@@ -27,9 +30,10 @@
         },
         data() {
             return {
+                freezeframeObject : ""
             }
         },
-        computed:{
+        computed: {
             ...mapState(['currentPost'])
         },
         async beforeMount() {

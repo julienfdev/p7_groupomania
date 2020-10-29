@@ -81,7 +81,7 @@
         methods: {
             previewImage(files) {
                 const acceptedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
-                const maxSize = 1024 * 1024;
+                const maxSize = 2048 * 1024;
                 const reader = new FileReader();
                 const fileUploaded = files.target.files[0];
                 if (acceptedTypes.includes(fileUploaded.type) && !(maxSize < fileUploaded.size)) {
