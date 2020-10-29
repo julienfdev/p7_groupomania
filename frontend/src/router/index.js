@@ -77,7 +77,10 @@ router.beforeEach(async (to, from, next) => {
 });
 
 router.afterEach(() => {
-  window.blur()
+  if (window.document.activeElement) {
+    window.scroll(0, 0);
+    window.document.activeElement.blur();
+  }
 })
 
 export default router
