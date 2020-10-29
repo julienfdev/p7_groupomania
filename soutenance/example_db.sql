@@ -24,9 +24,9 @@ DROP TABLE IF EXISTS `Categories`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Categories` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `slug` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -54,8 +54,8 @@ DROP TABLE IF EXISTS `Comments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Comments` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `slug` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `post_id` int NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE `Likes` (
 
 LOCK TABLES `Likes` WRITE;
 /*!40000 ALTER TABLE `Likes` DISABLE KEYS */;
-INSERT INTO `Likes` VALUES (1,1,'2020-10-29 09:09:00','2020-10-29 09:09:00',1,2),(2,1,'2020-10-29 09:09:09','2020-10-29 09:09:09',1,1),(3,1,'2020-10-29 09:09:29','2020-10-29 09:09:29',1,3),(4,-1,'2020-10-29 09:09:40','2020-10-29 09:09:40',1,5),(5,1,'2020-10-29 10:06:03','2020-10-29 10:06:03',3,5),(6,1,'2020-10-29 10:07:22','2020-10-29 10:07:22',3,6),(7,-1,'2020-10-29 10:08:07','2020-10-29 10:08:07',3,3),(8,1,'2020-10-29 10:08:08','2020-10-29 10:08:08',2,3),(9,1,'2020-10-29 10:11:57','2020-10-29 10:11:57',2,1),(10,1,'2020-10-29 10:12:00','2020-10-29 10:12:00',3,1),(11,1,'2020-10-29 10:12:51','2020-10-29 10:12:51',4,4),(12,1,'2020-10-29 10:13:48','2020-10-29 10:13:48',4,6),(13,1,'2020-10-29 10:13:55','2020-10-29 10:13:55',4,2),(14,1,'2020-10-29 10:14:03','2020-10-29 10:14:03',4,5),(15,1,'2020-10-29 10:15:34','2020-10-29 10:15:34',5,5);
+INSERT INTO `Likes` VALUES (1,1,'2020-10-29 09:09:00','2020-10-29 09:09:00',1,2),(2,1,'2020-10-29 09:09:09','2020-10-29 09:09:09',1,1),(3,1,'2020-10-29 09:09:29','2020-10-29 09:09:29',1,3),(4,-1,'2020-10-29 09:09:40','2020-10-29 09:09:40',1,5),(5,1,'2020-10-29 10:06:03','2020-10-29 10:06:03',3,5),(6,1,'2020-10-29 10:07:22','2020-10-29 10:07:22',3,6),(7,-1,'2020-10-29 10:08:07','2020-10-29 10:08:07',3,3),(8,1,'2020-10-29 10:08:08','2020-10-29 10:08:08',2,3),(9,1,'2020-10-29 10:11:57','2020-10-29 10:11:57',2,1),(10,1,'2020-10-29 10:12:00','2020-10-29 10:12:00',3,1),(11,1,'2020-10-29 10:12:51','2020-10-29 10:12:51',4,4),(12,1,'2020-10-29 10:13:48','2020-10-29 10:13:48',4,6),(13,1,'2020-10-29 10:13:55','2020-10-29 10:13:55',4,2),(14,1,'2020-10-29 10:14:03','2020-10-29 10:14:03',4,5);
 /*!40000 ALTER TABLE `Likes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,10 +120,10 @@ DROP TABLE IF EXISTS `Posts`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Posts` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `slug` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `likes` int DEFAULT '0',
-  `image_url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_hot` tinyint(1) DEFAULT '0',
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
@@ -144,7 +144,7 @@ CREATE TABLE `Posts` (
 
 LOCK TABLES `Posts` WRITE;
 /*!40000 ALTER TABLE `Posts` DISABLE KEYS */;
-INSERT INTO `Posts` VALUES (1,'bienvenue60068',2,'http://localhost:3000/public/images/bienvenue.jpg1603962432441.jpg','Bienvenue sur LolGag by Groupomania! 🎉',1,'2020-10-29 09:07:12','2020-10-29 09:09:40',2,1),(2,'hello-les76305',2,'http://localhost:3000/public/images/forrest.gif1603964776282.gif','Hello les collègues!',0,'2020-10-29 09:46:16','2020-10-29 10:11:57',1,2),(3,'bernard-qu59886',2,'http://localhost:3000/public/images/rage.jpg1603965959878.jpg','Bernard quand il sort de réunion',0,'2020-10-29 10:05:59','2020-10-29 10:12:00',1,5),(4,'steeve-qua68208',4,'http://localhost:3000/public/images/bus.gif1603966368187.gif','Steeve quand il va prendre le bus',1,'2020-10-29 10:12:48','2020-10-29 10:14:03',1,4),(5,'mon-chat-q21799',1,'http://localhost:3000/public/images/chatfou.jpg1603966521791.jpg','Mon chat quand il voit ma tête le matin',0,'2020-10-29 10:15:21','2020-10-29 10:15:34',3,5);
+INSERT INTO `Posts` VALUES (1,'bienvenue60068',2,'http://localhost:3000/public/images/bienvenue.jpg1603962432441.jpg','Bienvenue sur LolGag by Groupomania! 🎉',1,'2020-10-29 09:07:12','2020-10-29 09:09:40',2,1),(2,'hello-les76305',2,'http://localhost:3000/public/images/forrest.gif1603964776282.gif','Hello les collègues!',0,'2020-10-29 09:46:16','2020-10-29 10:11:57',1,2),(3,'bernard-qu59886',2,'http://localhost:3000/public/images/rage.jpg1603965959878.jpg','Bernard quand il sort de réunion',0,'2020-10-29 10:05:59','2020-10-29 10:12:00',1,5),(4,'steeve-qua68208',4,'http://localhost:3000/public/images/bus.gif1603966368187.gif','Steeve quand il va prendre le bus',1,'2020-10-29 10:12:48','2020-10-29 10:14:03',1,4);
 /*!40000 ALTER TABLE `Posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,10 +157,10 @@ DROP TABLE IF EXISTS `Users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `slug` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nickname` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nickname` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `isAdmin` tinyint(1) DEFAULT '0',
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
@@ -190,4 +190,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-29 11:16:55
+-- Dump completed on 2020-10-29 14:45:09
