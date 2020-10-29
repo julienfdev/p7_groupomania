@@ -4,7 +4,6 @@ import router from '../router/index';
 export default async (object) => {
     try {
         const apiCall = `${config.api.protocol}://${config.api.host}/api/${config.api.version}`
-        // VALIDATION JS
         const loginObject = {
             email: object.email,
             password: object.password

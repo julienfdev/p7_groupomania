@@ -1,4 +1,5 @@
 <template>
+<!-- The editblock is displayed when an user is editing a comment title -->
     <div class="d-flex mb-2 justify-content-between">
         <input type="text" class="col-9 border bg-dark text-light border-dark shadow-sm" v-model="currentTitle">
         <div class="col-3 justify-content-end d-flex">
@@ -43,6 +44,7 @@
                             title: this.currentTitle,
                             slug: this.post.slug
                         };
+                        // We try to update the object, if successful, the post has a new slug returned by the updatePost function and his title is now the edited one
                         const validatedEdit = await updatePost(updateObject, null, this.$store.state.currentUser);
                         if (validatedEdit) {
                             this.post.title = this.currentTitle;

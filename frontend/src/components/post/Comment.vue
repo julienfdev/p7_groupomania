@@ -7,6 +7,7 @@
                 </span>
             </div>
             <div v-if='!editToggle' class="text-justify"> {{comment.text}}</div>
+            <!-- Once edited, the component emits an event, if edit was successful, a payload with the edited text is present -->
             <EditComment class="" :comment='comment' v-if="editToggle" @deactivateEdit="handleEdit" />
         </div>
         <div class="col-lg-2 text-center py-2">
@@ -53,11 +54,13 @@
                 }
             },
             async deletion(comment) {
+                // If comment is successfully deleted from the DB, we emit commentDeleted to update the parent comments array 
                 if (await deleteComment(comment, this.currentUser)) {
                     this.$emit('commentDeleted');
                 }
             },
             handleEdit(payload){
+                // If edit was successful, we print the new text
                 if (payload){
                     this.comment.text = payload;
                 }
@@ -84,7 +87,7 @@
             color: #aaa;
         }
     }
-
+    // SVG masking for the icons
     .icon {
         background-color: #fff;
         mask: center no-repeat;

@@ -76,11 +76,13 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 
+// After each route navigation, blurring the activeElement and hiding the menu
 router.afterEach(() => {
   if (window.document.activeElement) {
     window.scroll(0, 0);
     window.document.activeElement.blur();
   }
+  window.$('#navcol-1').collapse('hide');
 })
 
 export default router

@@ -1,4 +1,5 @@
 <template>
+<!-- Pretty much the same thing than the EditBlock component, except we edit the currentPost inside vuex -->
     <div class="d-flex mb-2 justify-content-between">
         <input type="text" class="border bg-dark text-light border-dark mr-2 mr-lg-3 shadow-sm flex-grow-1"
             v-model="currentText">

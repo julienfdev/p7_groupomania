@@ -1,12 +1,13 @@
 <template>
+<!-- Admin view, displaying last registered user and comments -->
     <div class="container">
         <div class="row">
-            <div class="col-6 border-right">
+            <div class="col-12 col-lg-6 border-right">
                 <h3 class="text-center">Derniers commentaires</h3>
                 <hr />
                 <Comment @commentDeleted="refreshData" v-for="comment of lastComments" :key="comment.slug" :comment="comment" class="mx-2 text-white" />
             </div>
-            <div class="col-6">
+            <div class="col-12 col-lg-6">
                 <h3 class="text-center">Derniers inscrits</h3>
                 <hr />
                  <UserCard @userDeleted="refreshData" v-for="user of filteredUsers" :key="user.slug" :user="user" class="mx-2 text-white" />

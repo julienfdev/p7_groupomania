@@ -1,3 +1,4 @@
+// Tries to recover the currentUser into the localStorage
 export default () => {
     try {
         const currentUser = localStorage.getItem('currentUser');

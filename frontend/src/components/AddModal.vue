@@ -1,11 +1,12 @@
 <template>
+<!-- The "add a post" modal -->
     <div class="modal fade" id="addPostModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Poster une image</h5>
                 </div>
-                <form class="form" id="addPostForm" novalidate @submit.prevent="postImage">
+                <form class="form" id="addPostForm" novalidate @submit.prevent="postImage"><!-- Javascript validation (front & back) -->
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="col">
@@ -36,6 +37,7 @@
                                 <div class="form-group m-0">
                                     <label class='fileSelector__label text-center text-white m-0 p-0'
                                         for="fileSelector">Ajouter</label>
+                                        <!-- When a file is updated, the "previewImage" method is called, the event passes an event parameter -->
                                     <input type="file" name="fileSelector" id="fileSelector" class="fileSelector"
                                         @change="previewImage" multiple="false"
                                         accept="image/jpg, image/jpeg, image/png, image/gif">
@@ -81,14 +83,15 @@
         methods: {
             previewImage(files) {
                 const acceptedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
-                const maxSize = 2048 * 1024;
-                const reader = new FileReader();
+                const maxSize = 2048 * 1024; // 2MB
+                const reader = new FileReader(); // The FileReader provides tool to handle the bytestream
                 const fileUploaded = files.target.files[0];
                 if (acceptedTypes.includes(fileUploaded.type) && !(maxSize < fileUploaded.size)) {
-                    reader.readAsDataURL(fileUploaded);
+                    reader.readAsDataURL(fileUploaded);  // We create a base64 URL (async, see onload callback)
                 } else {
                     document.querySelector('#fileSelector').value = null;
                 }
+                // When the readDataAsUrl method is successful, we set the result to be the src of the preview image
                 reader.onload = () => {
                     const img = document.querySelector('#filePreviewer');
                     img.setAttribute('src', reader.result);

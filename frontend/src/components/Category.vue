@@ -29,8 +29,8 @@
             this.posts = await getCategoriesPosts(this.slug);
         },
         watch: {
+            // When the categories change without rerendering the component (ie when not changing from fresh to a category), we watch the route and when the slug changes we update the posts
             async $route(to) {
-                console.log('coucou')
                 this.posts = await getCategoriesPosts(to.params.slug);
             }
         },

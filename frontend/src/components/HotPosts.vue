@@ -1,4 +1,5 @@
 <template>
+<!-- displays hot posts -->
     <div>
         <div class="row" v-for="post in hotPosts" :key="post.index">
             <Post :post="post" @postDeleted='onDelete()'/>

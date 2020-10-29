@@ -1,4 +1,5 @@
 <template>
+<!-- The list of all the categories, displayed as a bar/column -->
     <div class="container">
         <div class="row d-flex justify-content-around ">
             <CategoryItem v-for="category in categories" :key="category.index" :category="category"/>

@@ -29,6 +29,7 @@
             const profile = await getUser(this.$route.params.slug);
             if (profile) {
                 if ((this.currentUser.isAdmin && this.currentUser.slug !== this.$route.params.slug) || (this.currentUser.slug === this.$route.params.slug && !(this.currentUser.isAdmin))) {
+                    // Do we need to show the delete button ?
                     profile.user.showExtended = true;
                 }
                 this.setProfile(profile.user);

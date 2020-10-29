@@ -1,4 +1,5 @@
 <template>
+<!-- Identification form, signup or login depending on prop "signingUp" -->
     <form class="d-flex flex-column justify-content-center ident" @submit.prevent="submitSignup()">
         <div class="form-group">
             <label for="email">Adresse E-mail</label>
@@ -18,8 +19,7 @@
         </div>
         <button type="submit"
             class="btn btn-primary mx-auto signup__btn">{{(signingUp)? 'S\'enregistrer' : 'S\'identifier' }}</button>
-        <div v-if="alertMessage" class="text-center alert alert-warning fade show ident__alert mt-3 fluid"
-            role="alert">
+        <div v-if="alertMessage" class="text-center alert alert-warning fade show ident__alert mt-3 fluid" role="alert">
             {{alertMessage}}
         </div>
     </form>

@@ -1,4 +1,5 @@
 <template>
+<!-- The post component handles the display of the title, image, likes, author etc... -->
     <div class="col my-2">
         <h3 v-if="!editToggle">
             <router-link class="postlink" :to="`/post/${post.slug}`">
@@ -86,6 +87,7 @@
             }
         },
         methods: {
+            // Like logic
             async like(post) {
                 if (post.likedByCurrentUser && post.liked === true) {
                     if (await likePost(post.slug, this.currentUser.slug, 0)) {
@@ -121,6 +123,7 @@
                 }
             },
             async toggleEvent(event) {
+                // Admin toggle to set a post Hot or Fresh
                 const postObject = {
                     slug: this.post.slug,
                     is_hot: event.value
@@ -136,6 +139,7 @@
             }
         },
         mounted() {
+            // At mount, if we're not on the DetailPost page and if the image is a GIF, we freeze it and trigger it by clicking
             if (this.post.image_url && !this.$route.params.slug) {
                 if (this.post.image_url.slice(-3) === 'gif') {
                     new Freezeframe({

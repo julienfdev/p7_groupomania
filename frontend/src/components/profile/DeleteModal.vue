@@ -1,4 +1,5 @@
 <template>
+<!-- A modal which appears when the user clicks delete on his profile -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -51,11 +52,13 @@
                 window.$('#deleteModal').modal('hide');
             },
             async deleteRoutine() {
+                // As the admin doesn't need to provide the user password, we test if it exists and call the deleteUser function accordingly
                 const passwordField = this.$el.querySelector('#confirmPassword');
                 if (await deleteUser(this.userProfile.slug, this.currentUser, (passwordField) ? passwordField
                         .value : undefined)) {
                     window.$('#deleteModal').modal('hide');
                     if (this.userProfile.slug === this.currentUser.slug) {
+                        // We logout the user
                         localStorage.removeItem('currentUser');
                     }
                 }

@@ -5,7 +5,6 @@ import login from './login';
 
 export default async (object) =>{
 try {
-    // VALIDATION
     if(!(object.password === object.passwordRepeat)){
         throw {customMessage: 'Les mots de passe sont différents'};
     }
@@ -32,7 +31,6 @@ try {
                 throw new Error;
         }
     }
-
 } catch (error) {
     if(error.customMessage){
         return error.customMessage;

@@ -1,4 +1,5 @@
 <template>
+<!-- contains information about the user and a delete button if the user logged appears to have the right to delete the User (double checked by the backend anyway) -->
     <div class="container border border-dark rounded">
         <div class="row p-2 p-lg-4 d-flex flex-lg-row flex-column align-items-center justify-content-between">
             <div class="d-flex align-items-center my-lg-0 mt-1 mb-3">

@@ -1,6 +1,8 @@
 <template>
+<!-- Create the navigation items based on the items array -->
     <ul class="nav navbar-nav d-flex flex-grow-1 justify-content-end">
         <li v-for="item of items" :key="item.name">
+            <!-- print item depending on logged status and if the user is admin or not -->
             <router-link v-if="(item.showLog === logged) && !(!admin && item.hideNonAdmin)" class="nav-link"
                  :to="item.root">
                 {{item.text}}</router-link>

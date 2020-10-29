@@ -1,4 +1,5 @@
 <template>
+<!-- User card displayed on the admin page, with a delete button -->
     <div class="row my-2 user__content border border-dark d-flex px-2 py-2">
         <div class="col">
             <div class="mr-3 comments__content__username">

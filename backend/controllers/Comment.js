@@ -14,7 +14,7 @@ exports.adminGetLastComments = async (req, res, next) => {
                 message: 'You are not an admin'
             };
         }
-        // Get last 50 Comments
+        // Get last 15 Comments
         const rawComments = await Comment.findAll({
             limit: 15,
             order: [

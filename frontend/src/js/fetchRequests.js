@@ -18,7 +18,6 @@ export const getPosts = async (category, page) => {
 
         return fetchResponse.json();
     } catch (error) {
-        // Faire de la gestion d'erreurs
         console.error(error);
     }
 };
@@ -40,7 +39,6 @@ export const getCategoriesPosts = async (category, page) => {
 
         return fetchResponse.json();
     } catch (error) {
-        // Faire de la gestion d'erreurs
         console.error(error);
     }
 }
@@ -58,7 +56,6 @@ export const getPost = async (slug) => {
         })
         return fetchResponse.json();
     } catch (error) {
-        // Faire de la gestion d'erreurs
         console.error(error);
     }
 }

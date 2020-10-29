@@ -1,4 +1,5 @@
 <template>
+<!-- Displays the user last posts -->
     <div class="container border border-dark">
         <div class="row p-2 justify-content-center">
             <h2>Contributions :</h2>
@@ -40,6 +41,7 @@
             Post
         },
         async beforeMount() {
+            // We fill the postArray with the user last posts
             this.postArray = await getUserPosts(this.$route.params.slug);
         }
     }
