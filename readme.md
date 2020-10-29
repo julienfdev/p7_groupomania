@@ -18,7 +18,11 @@ Commandes à executer depuis la racine
 ### Configuration Backend
 
         mkdir ./backend/config
-        cp ./soutenance/example.config.js ./backend/config/config.js
+        cp ./soutenance/example.config.backend.js ./backend/config/config.js
+
+### Configuration Frontend
+
+        cp ./soutenance/example.config.frontend.js ./frontend/src/js/config.js
 
 ### MySQL
 
