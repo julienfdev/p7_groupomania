@@ -136,12 +136,14 @@
             }
         },
         mounted() {
-            if (this.post.image_url.slice(-3) === 'gif') {
-                new Freezeframe({
-                    selector: this.uniqueClass,
-                    trigger: 'click',
-                    overlay: true
-                })
+            if (this.post.image_url) {
+                if (this.post.image_url.slice(-3) === 'gif') {
+                    new Freezeframe({
+                        selector: this.uniqueClass,
+                        trigger: 'click',
+                        overlay: true
+                    })
+                }
             }
         }
     }
