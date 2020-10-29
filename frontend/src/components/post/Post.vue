@@ -7,7 +7,8 @@
         </h3>
         <EditBlock v-if="editToggle" :post="post" @deactivateEdit="editToggle = false" />
         <div class="d-flex justify-content-center">
-            <img :src="post.image_url" :alt="post.title" class="img-fluid rounded shadow" />
+            <img :src="post.image_url" :alt="post.title" class="img-fluid rounded shadow freezeframe"
+                :class="post.slug" />
         </div>
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center mt-2 mb-0">
             <div class="d-flex align-items-center">
@@ -16,7 +17,14 @@
                 <p class="mb-0 mt-2 font-weight-bold">{{post.likes}}</p>
                 <button class="icon icon__down mx-2" @click="dislike(post)"
                     :class="{icon__down__disliked: (post.likedByCurrentUser && post.liked === false), icon__up__disabled: (post.likedByCurrentUser && post.liked === true)}" />
-                <p class="ml-4 mb-0 align-self-end">par <router-link :to="`/user/${post.userSlug}`"><span class="font-weight-bold">{{post.userName}}</span></router-link></p>
+
+                <p v-if="post.userSlug !== 'nobody'" class="ml-4 mb-0 align-self-end">par <router-link
+                        :to="`/user/${post.userSlug}`"><span class="font-weight-bold">{{post.userName}}</span>
+                    </router-link>
+                </p>
+                <p v-else class="ml-4 mb-0 align-self-end">par <span class="font-weight-bold">{{post.userName}}</span>
+                </p>
+
             </div>
             <div class="d-flex">
                 <ToggleButton v-if="currentUser.isAdmin" v-model="hotStatus" class="mx-2 mb-0" name="Hot"
@@ -51,6 +59,7 @@
         ToggleButton
     } from 'vue-js-toggle-button'
     import EditBlock from './EditBlock'
+    import Freezeframe from 'freezeframe'
 
     export default {
         name: 'Post',
@@ -61,11 +70,14 @@
         data() {
             return {
                 hotStatus: this.post.is_hot,
-                editToggle: false
+                editToggle: false,
             }
         },
         computed: {
-            ...mapState(['currentUser'])
+            ...mapState(['currentUser']),
+            uniqueClass() {
+                return ('.' + this.post.slug)
+            }
         },
         props: {
             post: {
@@ -117,13 +129,21 @@
                     this.hotStatus = !this.hotStatus;
                 }
             },
-            editToggling(){
-                if(!this.editToggle){
+            editToggling() {
+                if (!this.editToggle) {
                     this.editToggle = true;
                 }
             }
         },
-        beforeMount() {},
+        mounted() {
+            if (this.post.image_url.slice(-3) === 'gif') {
+                new Freezeframe({
+                    selector: this.uniqueClass,
+                    trigger: 'click',
+                    overlay: true
+                })
+            }
+        }
     }
 </script>
 

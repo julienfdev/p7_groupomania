@@ -77,7 +77,7 @@ router.beforeEach(async (to, from, next) => {
 });
 
 router.afterEach(() => {
-
+  window.blur()
 })
 
 export default router
