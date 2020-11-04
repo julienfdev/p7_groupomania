@@ -1,22 +1,22 @@
 <template>
-<!-- The post component handles the display of the title, image, likes, author etc... -->
+    <!-- The post component handles the display of the title, image, likes, author etc... -->
     <div class="col my-2">
-        <h3 v-if="!editToggle">
+        <h2 v-if="!editToggle" class="h3">
             <router-link class="postlink" :to="`/post/${post.slug}`">
                 {{(post.title.length > 60) ? post.title.slice(0, 60) + '...' : post.title }}
             </router-link>
-        </h3>
+        </h2>
         <EditBlock v-if="editToggle" :post="post" @deactivateEdit="editToggle = false" />
         <div class="d-flex justify-content-center">
-            <img :src="post.image_url" :alt="post.title" class="img-fluid rounded shadow freezeframe"
+            <img :src="post.image_url" :alt="`Image ${post.title}`" class="img-fluid rounded shadow freezeframe"
                 :class="post.slug" />
         </div>
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center mt-2 mb-0">
             <div class="d-flex align-items-center">
-                <button class="icon icon__up mx-2" @click='like(post)'
+                <button aria-label="like" class="icon icon__up mx-2" @click='like(post)'
                     :class="{icon__up__liked: (post.likedByCurrentUser && post.liked === true), icon__up__disabled: (post.likedByCurrentUser && post.liked === false)}" />
                 <p class="mb-0 mt-2 font-weight-bold">{{post.likes}}</p>
-                <button class="icon icon__down mx-2" @click="dislike(post)"
+                <button aria-label="dislike" class="icon icon__down mx-2" @click="dislike(post)"
                     :class="{icon__down__disliked: (post.likedByCurrentUser && post.liked === false), icon__up__disabled: (post.likedByCurrentUser && post.liked === true)}" />
 
                 <p v-if="post.userSlug !== 'nobody'" class="ml-4 mb-0 align-self-end">par <router-link
@@ -28,15 +28,16 @@
 
             </div>
             <div class="d-flex">
-                <ToggleButton v-if="currentUser.isAdmin" v-model="hotStatus" class="mx-2 mb-0" name="Hot"
-                    :value="hotStatus" :labels="{checked: 'Hot !', unchecked: 'Fresh'}" :width="70" :height="24"
-                    :color="{checked: '#217185', unchecked: '#343a40'}" :font-size="12" @change="toggleEvent" />
-                <button class="icon icon__trash mx-2" v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)"
-                    @click="deletion(post)" />
-                <button @click="editToggling" class="icon icon__edit mx-2" :class="{icon__edit__disabled: editToggle}"
+                    <ToggleButton v-if="currentUser.isAdmin" v-model="hotStatus" class="mx-2 mb-0" name="Hot"
+                        :value="hotStatus" :labels="{checked: 'Hot !', unchecked: 'Fresh'}" :width="70" :height="24"
+                        :color="{checked: '#ba4d55', unchecked: '#343a40'}" :font-size="12" @change="toggleEvent" />
+                <button aria-label="delete" class="icon icon__trash mx-2"
+                    v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" @click="deletion(post)" />
+                <button aria-label="edit" @click="editToggling" class="icon icon__edit mx-2"
+                    :class="{icon__edit__disabled: editToggle}"
                     v-if="currentUser.isAdmin || (post.userSlug === currentUser.slug)" />
                 <router-link :to="`/post/${post.slug}`">
-                    <div class="icon icon__comment mx-2" />
+                    <img src="@/assets/icons/comment.svg" alt="Commentaires" class="icon__comment">
                 </router-link>
             </div>
 
@@ -169,7 +170,7 @@
         mask-size: 100%;
         height: 1.5em;
         width: 1.5em;
-        transition: background-color 200ms ease-in-out;
+        transition: all 200ms ease-in-out;
 
         &__up {
             mask-image: url('../../assets/icons/thumbsUp.svg');
@@ -187,6 +188,7 @@
 
                 &:hover {
                     background-color: #aaa !important;
+
                 }
             }
         }
@@ -205,6 +207,7 @@
             &__disabled {
                 background-color: #aaa;
 
+
                 &:hover {
                     background-color: #aaa !important;
                 }
@@ -212,11 +215,7 @@
         }
 
         &__comment {
-            mask-image: url('../../assets/icons/comment.svg');
-
-            &:hover {
-                background-color: #bbf;
-            }
+            height: 1.5em;
         }
 
         &__edit {

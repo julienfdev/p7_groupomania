@@ -10,7 +10,7 @@
   @import '@/sass/main.scss';
 
   body {
-    background-color: lighten($dark, 10);
+    background-color: darken($secondary, 40);
     color: $light;
     text-shadow: 1px 1px 2px rgba(black, 0.8);
   }
@@ -29,7 +29,7 @@
       color: #2c3e50;
 
       &.router-link-exact-active {
-        color: #42b983;
+        color: #ba4d55;
       }
     }
   }

@@ -4,7 +4,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Poster une image</h5>
+                    <h2 class="h5 modal-title">Poster une image</h2>
                 </div>
                 <form class="form" id="addPostForm" novalidate @submit.prevent="postImage"><!-- Javascript validation (front & back) -->
                     <div class="modal-body">
@@ -32,7 +32,7 @@
                         </div>
                         <div class="row d-flex flex-column align-items-center">
                             <div class="previewer m-0 p-0 shadow d-flex flex-column">
-                                <img src="@/assets/image-placeholder.jpg" alt="Image" class="img-fluid"
+                                <img src="@/assets/image-placeholder.jpg" alt="Preview Upload" class="img-fluid"
                                     id='filePreviewer'>
                                 <div class="form-group m-0">
                                     <label class='fileSelector__label text-center text-white m-0 p-0'
